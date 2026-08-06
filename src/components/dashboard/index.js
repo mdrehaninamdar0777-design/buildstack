@@ -10,3 +10,4 @@ export { default as SkillProgress } from "./SkillProgress";
 export { default as WeeklyChart } from "./WeeklyChart";
 export { default as WelcomeCard } from "./WelcomeCard";
 export { default as DashboardHeader } from "./DashboardHeader";
+export { default as DashboardStats } from "./DashboardStats";

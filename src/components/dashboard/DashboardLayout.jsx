@@ -31,7 +31,7 @@ export default function DashboardLayout({
 
                     {/* Stats */}
                     {/* Progress */}
-                    <ProgressCards />
+                    <DashboardStats />
 
                     {/* Placeholder */}
                     <WeeklyChart />
