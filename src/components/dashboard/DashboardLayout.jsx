@@ -3,8 +3,8 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import WelcomeCard from "@/components/dashboard/WelcomeCard";
 import ProgressCards from "@/components/dashboard/ProgressCards";
 import WeeklyChart from "@/components/dashboard/WeeklyChart";
-import RoadmapPreview from "@/components/dashboard/RoadmapPreview";
-import ActivityFeed from "@/components/dashboard/ActivityFeed";
+import RoadmapPreview from "@/components/dashboard/RoadmapPreviewCard";
+import ActivityFeed from "@/components/dashboard/RecentActivityCard";
 
 export default function DashboardLayout({
     mode = "preview",
@@ -31,7 +31,7 @@ export default function DashboardLayout({
 
                     {/* Stats */}
                     {/* Progress */}
-                    <DashboardStats />
+                    <StatsSection />
 
                     {/* Placeholder */}
                     <WeeklyChart />

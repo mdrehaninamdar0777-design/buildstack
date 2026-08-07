@@ -50,11 +50,10 @@ export default function DashboardSidebar() {
           <button
             key={label}
             type="button"
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-              active
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 ${active
                 ? "bg-neutral-100 text-neutral-900"
                 : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900"
-            }`}
+              }`}
           >
             <Icon className="h-4 w-4" />
 

@@ -1,13 +1,13 @@
-export { default as ActivityFeed } from "./ActivityFeed";
-export { default as Achievements } from "./Achievements";
-export { default as ContinueLearningCard } from "./ContinueLearningCard";
+export { default as DashboardHeader } from "./DashboardHeader";
 export { default as DashboardLayout } from "./DashboardLayout";
 export { default as DashboardSidebar } from "./DashboardSidebar";
-export { default as LearningCalendar } from "./LearningCalendar";
-export { default as ProgressCards } from "./ProgressCards";
-export { default as RoadmapPreview } from "./RoadmapPreview";
-export { default as SkillProgress } from "./SkillProgress";
-export { default as WeeklyChart } from "./WeeklyChart";
-export { default as WelcomeCard } from "./WelcomeCard";
-export { default as DashboardHeader } from "./DashboardHeader";
-export { default as DashboardStats } from "./DashboardStats";
+
+export { default as StatCard } from "./StatCard";
+export { default as StatsSection } from "./StatsSection";
+export { default as WeeklyActivityCard } from "./WeeklyActivityCard";
+
+export { default as AchievementsCard } from "./AchievementsCard";
+export { default as LearningCalendarCard } from "./LearningCalendarCard";
+export { default as RoadmapPreviewCard } from "./RoadmapPreviewCard";
+export { default as SkillProgressCard } from "./SkillProgressCard";
+export { default as RecentActivityCard } from "./RecentActivityCard";
