@@ -1,47 +1,85 @@
+import DashboardSidebar from "./DashboardSidebar";
+import DashboardHeader from "./DashboardHeader";
 
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import WelcomeCard from "@/components/dashboard/WelcomeCard";
-import ProgressCards from "@/components/dashboard/ProgressCards";
-import WeeklyChart from "@/components/dashboard/WeeklyChart";
-import RoadmapPreview from "@/components/dashboard/RoadmapPreviewCard";
-import ActivityFeed from "@/components/dashboard/RecentActivityCard";
+import StatsSection from "./StatsSection";
+import WeeklyActivityCard from "./WeeklyActivityCard";
+import AchievementsCard from "./AchievementsCard";
+import LearningCalendarCard from "./LearningCalendarCard";
+import RoadmapPreviewCard from "./RoadmapPreviewCard";
+import SkillProgressCard from "./SkillProgressCard";
+import RecentActivityCard from "./RecentActivityCard";
+
+import {
+  achievements,
+  activeRoadmaps,
+  skillProgressData,
+  activityFeedData,
+} from "./dashboard.data";
 
 export default function DashboardLayout({
-    mode = "preview",
+  mode = "preview",
 }) {
-    const isPreview = mode === "preview";
-    return (
-        <div className="w-full max-w-[720px] rounded-3xl border border-neutral-200 bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+  const isPreview = mode === "preview";
 
-            {/* TOP ROW */}
-            <div className="grid grid-cols-12 gap-4">
+  return (
+    <div className="flex min-h-screen bg-neutral-50">
 
-                <aside className="col-span-3">
-                    <DashboardSidebar />
-                </aside>
+      <DashboardSidebar />
 
-                {/* Main */}
-                <section
-                    className="col-span-9 space-y-4"
-                    aria-label="Dashboard content"
-                >
+      <main className="flex-1 overflow-y-auto p-8">
 
-                    {/* Welcome */}
-                    <WelcomeCard />
+        <DashboardHeader />
 
-                    {/* Stats */}
-                    {/* Progress */}
-                    <StatsSection />
+        <div className="mt-8 space-y-8">
 
-                    {/* Placeholder */}
-                    <WeeklyChart />
-                    <RoadmapPreview />
-                    <ActivityFeed />
-                </section>
-            </div>
+          <StatsSection />
+
+          <div className="grid grid-cols-12 gap-6">
+
+            {/* Weekly Activity */}
+            <section className="col-span-8">
+              <WeeklyActivityCard />
+            </section>
+
+            {/* Achievements */}
+            <section className="col-span-4">
+              <AchievementsCard
+                achievements={achievements}
+              />
+            </section>
+
+            {/* Learning Calendar */}
+            <section className="col-span-6">
+              <LearningCalendarCard />
+            </section>
+
+            {/* Active Roadmaps */}
+            <section className="col-span-6">
+              <RoadmapPreviewCard
+                roadmaps={activeRoadmaps}
+              />
+            </section>
+
+            {/* Skill Progress */}
+            <section className="col-span-6">
+              <SkillProgressCard
+                skills={skillProgressData}
+              />
+            </section>
+
+            {/* Recent Activity */}
+            <section className="col-span-6">
+              <RecentActivityCard
+                activities={activityFeedData}
+              />
+            </section>
+
+          </div>
 
         </div>
 
+      </main>
 
-    );
+    </div>
+  );
 }

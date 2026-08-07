@@ -1,57 +1,85 @@
-import { ProgressBar, Card } from "@/components/ui";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
-const skills = [
-  {
-    name: "HTML",
-    progress: 95,
-  },
-  {
-    name: "CSS",
-    progress: 90,
-  },
-  {
-    name: "JavaScript",
-    progress: 80,
-  },
-  {
-    name: "React",
-    progress: 65,
-  },
-];
+import {
+  Card,
+  ProgressBar,
+} from "@/components/ui";
 
-export default function SkillProgress({
-  data = skills,
+import { cn } from "@/lib/utils";
+
+export default function SkillProgressCard({
+  title = "Skill Progress",
+  skills = [],
+  viewAllHref = "/learn",
+  className,
 }) {
   return (
-    <Card className="p-5">
+    <Card className={cn("p-6", className)}>
 
-      <h3 className="text-lg font-bold text-neutral-900">
-        Skill Progress
-      </h3>
+      {/* Header */}
+      <header className="mb-6 flex items-center justify-between">
 
-      <div className="mt-6 space-y-5">
+        <h2 className="text-lg font-semibold text-neutral-900">
+          {title}
+        </h2>
 
-        {data.map((skill) => (
-          <div key={skill.name}>
+        <Link
+          href={viewAllHref}
+          className="flex items-center gap-1 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+        >
+          View All
 
-            <div className="mb-2 flex justify-between">
+          <ChevronRight className="h-4 w-4" />
+        </Link>
 
-              <span className="text-sm font-medium">
-                {skill.name}
-              </span>
+      </header>
 
-              <span className="text-sm text-neutral-500">
-                {skill.progress}%
-              </span>
+      {/* Skills */}
+      {skills.length > 0 ? (
+        <div className="space-y-6">
 
-            </div>
+          {skills.map((skill) => (
+            <article
+              key={skill.id}
+              className="space-y-3"
+            >
 
-            <ProgressBar value={skill.progress} />
+              <div className="flex items-center justify-between">
 
-          </div>
-        ))}
+                <div>
 
-      </div>
+                  <h3 className="font-medium text-neutral-900">
+                    {skill.name}
+                  </h3>
+
+                  <p className="text-sm text-neutral-500">
+                    {skill.level}
+                  </p>
+
+                </div>
+
+                <span className="text-sm font-semibold text-neutral-700">
+                  {skill.progress}%
+                </span>
+
+              </div>
+
+              <ProgressBar value={skill.progress} />
+
+            </article>
+          ))}
+
+        </div>
+      ) : (
+        <div className="flex items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10">
+
+          <p className="text-sm text-neutral-500">
+            No skills found.
+          </p>
+
+        </div>
+      )}
 
     </Card>
   );

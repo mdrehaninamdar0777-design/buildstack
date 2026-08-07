@@ -1,116 +1,87 @@
-import {
-  Trophy,
-  Flame,
-  Target,
-  Award,
-} from "lucide-react";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 import { Card } from "@/components/ui";
+import { cn } from "@/lib/utils";
 
-const achievements = [
-  {
-    id: 1,
-    title: "First Roadmap Completed",
-    description: "Completed your first roadmap",
-    date: "May 15, 2025",
-    icon: Trophy,
-    bg: "bg-yellow-100",
-    color: "text-yellow-600",
-  },
-  {
-    id: 2,
-    title: "12 Day Streak",
-    description: "Keep learning every day",
-    date: "May 18, 2025",
-    icon: Flame,
-    bg: "bg-orange-100",
-    color: "text-orange-600",
-  },
-  {
-    id: 3,
-    title: "100 Lessons Completed",
-    description: "Completed 100 lessons",
-    date: "May 14, 2025",
-    icon: Target,
-    bg: "bg-green-100",
-    color: "text-green-600",
-  },
-  {
-    id: 4,
-    title: "90% Quiz Accuracy",
-    description: "Scored 90% or more in a quiz",
-    date: "May 12, 2025",
-    icon: Award,
-    bg: "bg-blue-100",
-    color: "text-blue-600",
-  },
-];
-
-export default function AchievementsCard() {
+export default function AchievementsCard({
+  achievements = [],
+  title = "Achievements",
+  viewAllHref = "/dashboard/achievements",
+  className,
+}) {
   return (
-    <Card className="p-6">
-
+    <Card className={cn("p-6", className)}>
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-
-        <h2 className="text-xl font-bold text-neutral-900">
-          Achievements
+      <header className="mb-6 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-neutral-900">
+          {title}
         </h2>
 
-        <button className="text-sm font-medium text-neutral-500 transition hover:text-neutral-900">
-          View all
-        </button>
+        <Link
+          href={viewAllHref}
+          className="flex items-center gap-1 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+        >
+          View All
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+      </header>
 
-      </div>
-
-      {/* Achievement List */}
-      <div className="space-y-6">
-
-        {achievements.map(
-          ({
-            id,
-            title,
-            description,
-            date,
-            icon: Icon,
-            bg,
-            color,
-          }) => (
-            <div
-              key={id}
-              className="flex items-start gap-4"
-            >
-
-              <div
-                className={`flex h-12 w-12 items-center justify-center rounded-xl ${bg}`}
+      {/* Content */}
+      {achievements.length > 0 ? (
+        <div className="space-y-5">
+          {achievements.map(
+            ({
+              id,
+              icon: Icon,
+              iconClassName,
+              iconContainerClassName,
+              title,
+              description,
+              earnedAt,
+            }) => (
+              <article
+                key={id}
+                className="flex items-start gap-4"
               >
-                <Icon
-                  className={`h-6 w-6 ${color}`}
-                />
-              </div>
+                <div
+                  className={cn(
+                    "flex h-11 w-11 items-center justify-center rounded-xl",
+                    iconContainerClassName
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "h-5 w-5",
+                      iconClassName
+                    )}
+                  />
+                </div>
 
-              <div className="flex-1">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-medium text-neutral-900">
+                    {title}
+                  </h3>
 
-                <h3 className="font-semibold text-neutral-900">
-                  {title}
-                </h3>
+                  <p className="mt-1 text-sm text-neutral-500">
+                    {description}
+                  </p>
 
-                <p className="mt-1 text-sm text-neutral-500">
-                  {description}
-                </p>
-
-                <p className="mt-1 text-xs text-neutral-400">
-                  {date}
-                </p>
-
-              </div>
-
-            </div>
-          )
-        )}
-
-      </div>
-
+                  <time className="mt-2 block text-xs text-neutral-400">
+                    {earnedAt}
+                  </time>
+                </div>
+              </article>
+            )
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10">
+          <p className="text-sm text-neutral-500">
+            No achievements yet.
+          </p>
+        </div>
+      )}
     </Card>
   );
 }

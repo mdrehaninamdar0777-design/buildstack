@@ -1,41 +1,113 @@
-import { CalendarDays } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Card } from "@/components/ui";
 
-export default function LearningCalendar({
-  streak = 12,
-  nextSession = "Today • 7:00 PM",
-}) {
+const weeks = [
+  ["", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", ""],
+  ["", "", "", "", "", "", ""],
+];
+
+export default function LearningCalendarCard() {
   return (
-    <Card className="p-5">
+    <Card className="p-6">
 
-      <div className="flex items-center gap-3">
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between">
 
-        <div className="rounded-xl bg-neutral-100 p-3">
-          <CalendarDays className="h-5 w-5 text-neutral-700" />
-        </div>
+        <h2 className="text-xl font-bold text-neutral-900">
+          Learning Calendar
+        </h2>
 
-        <div>
-          <h3 className="font-semibold text-neutral-900">
-            Learning Calendar
-          </h3>
-
-          <p className="text-sm text-neutral-500">
-            {nextSession}
-          </p>
-        </div>
+        <button className="text-sm font-medium text-neutral-500 hover:text-neutral-900">
+          View all
+        </button>
 
       </div>
 
-      <div className="mt-6 rounded-xl bg-neutral-50 p-4">
+      {/* Month */}
+      <div className="mb-6 flex items-center justify-center gap-5">
 
-        <p className="text-sm text-neutral-500">
-          Current Streak
-        </p>
+        <button>
+          <ChevronLeft className="h-5 w-5 text-neutral-500" />
+        </button>
 
-        <h2 className="mt-1 text-3xl font-bold text-neutral-900">
-          {streak} Days 🔥
-        </h2>
+        <h3 className="text-lg font-semibold">
+          May 2025
+        </h3>
+
+        <button>
+          <ChevronRight className="h-5 w-5 text-neutral-500" />
+        </button>
+
+      </div>
+
+      {/* Week Days */}
+      <div className="mb-4 grid grid-cols-7 text-center text-xs font-medium text-neutral-500">
+
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+        <span>Sun</span>
+
+      </div>
+
+      {/* Calendar */}
+      <div className="space-y-3">
+
+        {weeks.map((week, row) => (
+          <div
+            key={row}
+            className="grid grid-cols-7 gap-3"
+          >
+
+            {week.map((_, col) => {
+
+              const active =
+                Math.random() > 0.55;
+
+              return (
+                <div
+                  key={col}
+                  className={`h-6 rounded-md ${
+                    active
+                      ? "bg-green-500"
+                      : "bg-neutral-100"
+                  }`}
+                />
+              );
+
+            })}
+
+          </div>
+        ))}
+
+      </div>
+
+      {/* Legend */}
+      <div className="mt-8 flex items-center justify-center gap-4">
+
+        <span className="text-xs text-neutral-500">
+          Less
+        </span>
+
+        <div className="flex gap-2">
+
+          <div className="h-3 w-6 rounded bg-green-100" />
+          <div className="h-3 w-6 rounded bg-green-200" />
+          <div className="h-3 w-6 rounded bg-green-300" />
+          <div className="h-3 w-6 rounded bg-green-500" />
+
+        </div>
+
+        <span className="text-xs text-neutral-500">
+          More
+        </span>
 
       </div>
 
