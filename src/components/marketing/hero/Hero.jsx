@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+
 import {
   heroContent,
   heroButtons,
@@ -10,7 +11,7 @@ import {
 export default function Hero() {
   return (
     <section className="bg-white">
-      <div className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-16 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:gap-16">
 
         {/* Left Content */}
         <div className="max-w-xl">
@@ -50,7 +51,6 @@ export default function Hero() {
           <div className="mt-10 flex items-center gap-5">
 
             <div className="flex -space-x-3">
-
               {heroAvatars.map((avatar) => (
                 <img
                   key={avatar.id}
@@ -59,7 +59,6 @@ export default function Hero() {
                   className="h-10 w-10 rounded-full border-2 border-white object-cover"
                 />
               ))}
-
             </div>
 
             <div>
@@ -81,7 +80,9 @@ export default function Hero() {
               </div>
 
               <p className="mt-1 text-sm text-neutral-500">
-                Join {(heroStats.developers / 1000).toFixed(0)}K+ developers learning together.
+                Join{" "}
+                {(heroStats.developers / 1000).toFixed(0)}
+                K+ developers learning together.
               </p>
 
             </div>
@@ -91,7 +92,9 @@ export default function Hero() {
         </div>
 
         {/* Right Content */}
-        <DashboardLayout mode="preview" />
+        <div className="min-w-0">
+          <DashboardLayout mode="preview" />
+        </div>
 
       </div>
     </section>

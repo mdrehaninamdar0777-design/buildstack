@@ -1,54 +1,26 @@
-import {
-  Clock3,
-  BookOpen,
-  Map,
-  Flame,
-} from "lucide-react";
-
 import StatCard from "./StatCard";
 
-const stats = [
-  {
-    title: "Total Learning Hours",
-    value: "87.6 hrs",
-    subtitle: "↑ 18% vs last week",
-    icon: Clock3,
-    trend: "",
-  },
-  {
-    title: "Completed Skills",
-    value: "18",
-    subtitle: "↑ 12% vs last week",
-    icon: BookOpen,
-    trend: "",
-  },
-  {
-    title: "Active Roadmaps",
-    value: "3",
-    subtitle: "0% vs last week",
-    icon: Map,
-    trend: "",
-  },
-  {
-    title: "Current Streak",
-    value: "12 days",
-    subtitle: "↑ 2 days vs last week",
-    icon: Flame,
-    trend: "",
-  },
-];
+export default function StatsSection({
+  stats,
+  mode = "full",
+}) {
+  const isPreview = mode === "preview";
 
-export default function StatsSection() {
   return (
-    <section className="grid grid-cols-4 gap-5">
-
-      {stats.map((item) => (
+    <section
+      className={
+        isPreview
+         ? "grid grid-cols-4 gap-3"
+          : "grid grid-cols-4 gap-6"
+      }
+    >
+      {stats.map((stat) => (
         <StatCard
-          key={item.title}
-          {...item}
+          key={stat.title}
+          {...stat}
+          mode={mode}
         />
       ))}
-
     </section>
   );
 }

@@ -18,10 +18,8 @@ function CustomTooltip({ active, payload, label }) {
   }
 
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 shadow-xl">
-      <p className="text-sm font-semibold text-neutral-900">
-        {label}
-      </p>
+    <div className="rounded-lg border border-neutral-200 bg-white px-4 py-3 shadow-lg">
+      <p className="font-medium text-neutral-900">{label}</p>
 
       <p className="mt-1 text-sm text-neutral-500">
         Learning Hours
@@ -34,29 +32,40 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-function CustomDot({ cx, cy, stroke }) {
+function CustomDot({ cx, cy }) {
   return (
     <Dot
       cx={cx}
       cy={cy}
-      r={5}
-      fill={stroke}
+      r={4}
+      fill="#2563eb"
       stroke="#ffffff"
-      strokeWidth={3}
+      strokeWidth={2}
     />
   );
 }
 
-export default function WeeklyActivityChart({ data }) {
+export default function WeeklyActivityChart({
+  data,
+  mode = "full",
+}) {
+  const isPreview = mode === "preview";
+
   return (
-    <div className="h-80 w-full">
+    <div
+      className={
+        isPreview
+          ? "h-[180px] w-full"
+          : "h-[320px] w-full"
+      }
+    >
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={data}
           margin={{
             top: 12,
             right: 12,
-            left: -20,
+            left: isPreview ? -25 : -20,
             bottom: 0,
           }}
         >
@@ -71,7 +80,7 @@ export default function WeeklyActivityChart({ data }) {
               <stop
                 offset="0%"
                 stopColor="#2563eb"
-                stopOpacity={0.25}
+                stopOpacity={0.18}
               />
               <stop
                 offset="100%"
@@ -92,7 +101,7 @@ export default function WeeklyActivityChart({ data }) {
             tickLine={false}
             tick={{
               fill: "#737373",
-              fontSize: 13,
+              fontSize: isPreview ? 10 : 13,
             }}
           />
 
@@ -101,7 +110,7 @@ export default function WeeklyActivityChart({ data }) {
             tickLine={false}
             tick={{
               fill: "#737373",
-              fontSize: 13,
+              fontSize: isPreview ? 10 : 13,
             }}
           />
 
@@ -124,10 +133,10 @@ export default function WeeklyActivityChart({ data }) {
             type="monotone"
             dataKey="hours"
             stroke="#2563eb"
-            strokeWidth={3}
+            strokeWidth={isPreview ? 2 : 3}
             dot={<CustomDot />}
             activeDot={{
-              r: 7,
+              r: isPreview ? 5 : 7,
             }}
             animationDuration={900}
           />
