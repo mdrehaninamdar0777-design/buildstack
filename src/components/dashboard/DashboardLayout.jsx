@@ -10,6 +10,11 @@ import SkillProgressCard from "./SkillProgressCard";
 import RecentActivityCard from "./RecentActivityCard";
 
 import {
+  dashboardHeaderData,
+  dashboardStats,
+  weeklyActivityData,
+  weeklyActivitySummary,
+  learningCalendarData,
   achievements,
   activeRoadmaps,
   skillProgressData,
@@ -17,69 +22,79 @@ import {
 } from "./dashboard.data";
 
 export default function DashboardLayout({
-  mode = "preview",
+    mode = "preview",
 }) {
-  const isPreview = mode === "preview";
+    const isPreview = mode === "preview";
 
-  return (
-    <div className="flex min-h-screen bg-neutral-50">
+    return (
+        <div className="flex min-h-screen bg-neutral-50">
+            {/* Sidebar */}
+            <DashboardSidebar />
 
-      <DashboardSidebar />
+            {/* Main Content */}
+            <main className="flex-1 overflow-y-auto p-8">
+                {/* Dashboard Header */}
+                <DashboardHeader
+                    title={dashboardHeaderData.title}
+                    description={dashboardHeaderData.description}
+                    dateRange={dashboardHeaderData.dateRange}
+                />
 
-      <main className="flex-1 overflow-y-auto p-8">
+                {/* Dashboard Content */}
+                <div className="mt-8 space-y-8">
+                    {/* Statistics */}
+                    <StatsSection
+                        stats={dashboardStats}
+                    />
 
-        <DashboardHeader />
+                    {/* Dashboard Grid */}
+                    <div className="grid grid-cols-12 gap-6">
 
-        <div className="mt-8 space-y-8">
+                        {/* Weekly Activity */}
+                        <section className="col-span-8">
+                            <WeeklyActivityCard
+                                data={weeklyActivityData}
+                                summary={weeklyActivitySummary}
+                            />
+                        </section>
 
-          <StatsSection />
+                        {/* Achievements */}
+                        <section className="col-span-4">
+                            <AchievementsCard
+                                achievements={achievements}
+                            />
+                        </section>
 
-          <div className="grid grid-cols-12 gap-6">
+                        {/* Learning Calendar */}
+                        <section className="col-span-6">
+                            <LearningCalendarCard
+                                data={learningCalendarData}
+                            />
+                        </section>
 
-            {/* Weekly Activity */}
-            <section className="col-span-8">
-              <WeeklyActivityCard />
-            </section>
+                        {/* Active Roadmaps */}
+                        <section className="col-span-6">
+                            <RoadmapPreviewCard
+                                roadmaps={activeRoadmaps}
+                            />
+                        </section>
 
-            {/* Achievements */}
-            <section className="col-span-4">
-              <AchievementsCard
-                achievements={achievements}
-              />
-            </section>
+                        {/* Skill Progress */}
+                        <section className="col-span-6">
+                            <SkillProgressCard
+                                skills={skillProgressData}
+                            />
+                        </section>
 
-            {/* Learning Calendar */}
-            <section className="col-span-6">
-              <LearningCalendarCard />
-            </section>
-
-            {/* Active Roadmaps */}
-            <section className="col-span-6">
-              <RoadmapPreviewCard
-                roadmaps={activeRoadmaps}
-              />
-            </section>
-
-            {/* Skill Progress */}
-            <section className="col-span-6">
-              <SkillProgressCard
-                skills={skillProgressData}
-              />
-            </section>
-
-            {/* Recent Activity */}
-            <section className="col-span-6">
-              <RecentActivityCard
-                activities={activityFeedData}
-              />
-            </section>
-
-          </div>
-
+                        {/* Recent Activity */}
+                        <section className="col-span-6">
+                            <RecentActivityCard
+                                activities={activityFeedData}
+                            />
+                        </section>
+                    </div>
+                </div>
+            </main>
         </div>
-
-      </main>
-
-    </div>
-  );
+    );
 }
