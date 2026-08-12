@@ -26,75 +26,54 @@ export default function DashboardLayout({
   const isPreview = mode === "preview";
 
   return (
-    <div
-      className={
-        isPreview
-          ? "h-[500px] overflow-hidden space-y-4 origin-top"
-          : "mt-8 space-y-8"
-      }
-    >
+    <div className="space-y-8">
+      <DashboardHeader
+        title={dashboardHeaderData.title}
+        description={dashboardHeaderData.description}
+        dateRange={dashboardHeaderData.dateRange}
+      />
+
+      <StatsSection
+        stats={dashboardStats}
+        mode={isPreview ? "preview" : "full"}
+      />
+
       {isPreview ? (
-        <>
-          <DashboardHeader
-            title={dashboardHeaderData.title}
-            description={dashboardHeaderData.description}
-            dateRange={dashboardHeaderData.dateRange}
-          />
-
-          <StatsSection
-            stats={dashboardStats}
-            mode="preview"
-          />
-
-          <WeeklyActivityCard
-            data={weeklyActivityData}
-            summary={weeklyActivitySummary}
-            mode="preview"
-          />
-        </>
+        <WeeklyActivityCard
+          data={weeklyActivityData}
+          summary={weeklyActivitySummary}
+          mode="preview"
+        />
       ) : (
-        <>
-          <DashboardHeader
-            title={dashboardHeaderData.title}
-            description={dashboardHeaderData.description}
-            dateRange={dashboardHeaderData.dateRange}
-          />
+        <div className="grid grid-cols-12 gap-6">
+          <section className="col-span-8">
+            <WeeklyActivityCard
+              data={weeklyActivityData}
+              summary={weeklyActivitySummary}
+              mode="full"
+            />
+          </section>
 
-          <StatsSection
-            stats={dashboardStats}
-            mode="full"
-          />
+          <section className="col-span-4">
+            <AchievementsCard achievements={achievements} />
+          </section>
 
-          <div className="grid grid-cols-12 gap-6">
-            <section className="col-span-8">
-              <WeeklyActivityCard
-                data={weeklyActivityData}
-                summary={weeklyActivitySummary}
-                mode="full"
-              />
-            </section>
+          <section className="col-span-6">
+            <LearningCalendarCard data={learningCalendarData} />
+          </section>
 
-            <section className="col-span-4">
-              <AchievementsCard achievements={achievements} />
-            </section>
+          <section className="col-span-6">
+            <RoadmapPreviewCard roadmaps={activeRoadmaps} />
+          </section>
 
-            <section className="col-span-6">
-              <LearningCalendarCard data={learningCalendarData} />
-            </section>
+          <section className="col-span-6">
+            <SkillProgressCard skills={skillProgressData} />
+          </section>
 
-            <section className="col-span-6">
-              <RoadmapPreviewCard roadmaps={activeRoadmaps} />
-            </section>
-
-            <section className="col-span-6">
-              <SkillProgressCard skills={skillProgressData} />
-            </section>
-
-            <section className="col-span-6">
-              <RecentActivityCard activities={activityFeedData} />
-            </section>
-          </div>
-        </>
+          <section className="col-span-6">
+            <RecentActivityCard activities={activityFeedData} />
+          </section>
+        </div>
       )}
     </div>
   );

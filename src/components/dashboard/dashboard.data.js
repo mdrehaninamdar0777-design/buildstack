@@ -180,5 +180,5 @@ export const learningCalendarData = {
 export const dashboardHeaderData = {
   title: "Dashboard",
   description: "Track your learning progress and achievements.",
-  dateRange: "May 12 – May 18, 2025",
+  dateRange: "May 12 – May 18, 2026",
 };
