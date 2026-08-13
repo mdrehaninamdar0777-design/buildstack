@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Pencil } from "lucide-react";
 
 export default function ProfileCard({ profile }) {
@@ -33,13 +34,13 @@ export default function ProfileCard({ profile }) {
             {profile.email}
           </p>
 
-          <button
-            type="button"
-            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
-          >
-            <Pencil className="h-4 w-4" />
-            Edit Profile
-          </button>
+          <Link
+  href="/edit-profile"
+  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
+>
+  <Pencil className="h-4 w-4" />
+  Edit Profile
+</Link>
         </div>
       </div>
     </section>
