@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   User,
   Settings,
@@ -9,189 +10,255 @@ import {
   LogOut,
   Search,
   ChevronDown,
+  Flame,
+  Sun,
+  Menu,
 } from "lucide-react";
-import { useState } from "react";
+import { BuildStackLogo } from "@/components/shared";
+import {
+  AccountDrawer,
+  EditProfileModal,
+  ChangePasswordModal,
+} from "@/components/profile";
 
-export default function AppNavbar() {
+export default function AppNavbar({ onToggleMobileSidebar }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [accountDrawerOpen, setAccountDrawerOpen] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const isActive = (href) => pathname === href;
+  const isActive = (href) => {
+    if (href === "/home") return pathname === "/home";
+    if (href === "/learn") return pathname.startsWith("/learn");
+    if (href === "/dashboard") return pathname === "/dashboard";
+    return pathname === href;
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push("/search");
+    }
+  };
 
   const handleLogout = () => {
-    setProfileOpen(false);
-
-    // Authentication will be connected later.
+    setProfileDropdownOpen(false);
     router.push("/");
   };
 
   return (
-    <header className="w-full border-b border-neutral-200 bg-white">
-      <div className="mx-auto flex h-20 max-w-[1400px] items-center px-6 lg:px-10">
-        {/* Logo */}
-        <Link
-          href="/home"
-          className="flex shrink-0 items-center gap-2"
-        >
-          <span className="text-2xl font-bold text-neutral-900">
-            ◈
-          </span>
+    <>
+      <header className="sticky top-0 z-40 w-full border-b border-neutral-200 bg-white">
+        <div className="mx-auto flex h-20 max-w-[1400px] items-center px-4 sm:px-6 lg:px-10">
 
-          <span className="text-xl font-bold tracking-tight text-neutral-900">
-            BuildStack
-          </span>
-        </Link>
-
-        {/* Navigation */}
-        <nav className="ml-12 flex items-center gap-8">
-          <Link
-            href="/home"
-            className={`text-sm transition-colors ${
-              isActive("/home")
-                ? "font-semibold text-neutral-900"
-                : "font-medium text-neutral-600 hover:text-neutral-900"
-            }`}
-          >
-            Home
-          </Link>
-
-          <Link
-            href="/learn"
-            className={`text-sm transition-colors ${
-              isActive("/learn")
-                ? "font-semibold text-neutral-900"
-                : "font-medium text-neutral-600 hover:text-neutral-900"
-            }`}
-          >
-            Learn
-          </Link>
-
-          <Link
-            href="/dashboard"
-            className={`text-sm transition-colors ${
-              isActive("/dashboard")
-                ? "font-semibold text-neutral-900"
-                : "font-medium text-neutral-600 hover:text-neutral-900"
-            }`}
-          >
-            Dashboard
-          </Link>
-        </nav>
-
-        {/* Search */}
-        <div className="ml-auto hidden lg:flex">
-          <div className="flex h-11 w-[340px] items-center rounded-xl border border-neutral-200 bg-white px-4">
-            <Search className="mr-3 h-4 w-4 text-neutral-400" />
-
-            <span className="flex-1 text-sm text-neutral-400">
-              Search roadmaps, topics, resources...
-            </span>
-
-            <span className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-neutral-500">
-              ⌘ K
-            </span>
-          </div>
-        </div>
-
-        {/* Profile */}
-        <div className="relative ml-6">
+          {/* Mobile hamburger */}
           <button
             type="button"
-            onClick={() => setProfileOpen((prev) => !prev)}
-            className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-neutral-50"
-            aria-expanded={profileOpen}
-            aria-haspopup="menu"
+            onClick={onToggleMobileSidebar}
+            className="mr-3 rounded-xl p-2 text-neutral-600 hover:bg-neutral-100 lg:hidden"
+            aria-label="Toggle navigation"
           >
-            {/* Avatar */}
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-sm font-semibold text-neutral-700">
-              R
-            </div>
-
-            {/* Name */}
-            <span className="hidden text-sm font-semibold text-neutral-900 sm:block">
-              Rehan
-            </span>
-
-            <ChevronDown
-              className={`h-4 w-4 text-neutral-500 transition-transform ${
-                profileOpen ? "rotate-180" : ""
-              }`}
-            />
+            <Menu className="h-5 w-5" />
           </button>
 
-          {/* Dropdown */}
-          {profileOpen && (
-            <div className="absolute right-0 top-full z-50 mt-3 w-72 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-lg">
-              {/* User information */}
-              <div className="border-b border-neutral-200 p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-sm font-semibold text-neutral-700">
-                    R
-                  </div>
+          {/* Logo */}
+          <div className="shrink-0">
+            <BuildStackLogo href="/home" size={28} />
+          </div>
 
-                  <div className="min-w-0">
-                    <p className="font-semibold text-neutral-900">
-                      Rehan
-                    </p>
+          {/* Center Navigation */}
+          <nav className="ml-8 hidden items-center gap-2 md:flex lg:ml-10">
+            <Link
+              href="/home"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                isActive("/home")
+                  ? "bg-neutral-900 text-white"
+                  : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+              }`}
+            >
+              Home
+            </Link>
 
-                    <p className="truncate text-sm text-neutral-500">
+            <Link
+              href="/learn"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                isActive("/learn")
+                  ? "bg-neutral-900 text-white"
+                  : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+              }`}
+            >
+              Learn
+            </Link>
+
+            <Link
+              href="/dashboard"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                isActive("/dashboard")
+                  ? "bg-neutral-900 text-white"
+                  : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+              }`}
+            >
+              Dashboard
+            </Link>
+          </nav>
+
+          {/* Search bar */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="ml-auto hidden items-center md:flex"
+          >
+            <div className="flex h-11 w-64 items-center rounded-xl border border-neutral-200 bg-white px-3.5 transition focus-within:border-neutral-400 lg:w-80">
+              <Search className="mr-2.5 h-4 w-4 shrink-0 text-neutral-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search roadmaps, skills, topics..."
+                className="w-full bg-transparent text-xs text-neutral-900 outline-none placeholder:text-neutral-400 sm:text-sm"
+              />
+            </div>
+          </form>
+
+          {/* Right Header Controls */}
+          <div className="ml-4 flex items-center gap-3 sm:gap-4">
+
+            {/* Streak Pill */}
+            <div className="flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs font-semibold text-neutral-800">
+              <Flame className="h-4 w-4 fill-orange-500 text-orange-500" />
+              <span>12</span>
+            </div>
+
+            {/* Theme / Light-Dark Toggle Button */}
+            <button
+              type="button"
+              className="hidden rounded-xl border border-neutral-200 p-2 text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900 sm:flex"
+              aria-label="Toggle theme"
+            >
+              <Sun className="h-4 w-4" />
+            </button>
+
+            {/* User Avatar Menu Trigger */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setProfileDropdownOpen((prev) => !prev)}
+                className="flex items-center gap-2.5 rounded-xl p-1 transition hover:bg-neutral-50"
+                aria-expanded={profileDropdownOpen}
+                aria-haspopup="menu"
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-xs font-bold text-white shadow-xs">
+                  R
+                </div>
+                <span className="hidden text-sm font-semibold text-neutral-900 lg:block">
+                  Rehan
+                </span>
+                <ChevronDown
+                  className={`hidden h-4 w-4 text-neutral-400 transition-transform lg:block ${
+                    profileDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown Menu */}
+              {profileDropdownOpen && (
+                <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl">
+                  <div className="border-b border-neutral-100 p-3">
+                    <p className="font-bold text-neutral-900">Rehan Inamdar</p>
+                    <p className="truncate text-xs text-neutral-500">
                       rehan@example.com
                     </p>
                   </div>
+
+                  <div className="space-y-1 py-1">
+                    <Link
+                      href="/profile"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                    >
+                      <User className="h-4 w-4 text-neutral-400" />
+                      View Profile
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        setAccountDrawerOpen(true);
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                    >
+                      <Settings className="h-4 w-4 text-neutral-400" />
+                      My Account & Stats
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        setEditProfileOpen(true);
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                    >
+                      <Settings className="h-4 w-4 text-neutral-400" />
+                      Edit Profile
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        setChangePasswordOpen(true);
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                    >
+                      <Lock className="h-4 w-4 text-neutral-400" />
+                      Change Password
+                    </button>
+                  </div>
+
+                  <div className="border-t border-neutral-100 pt-1">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-              {/* Menu */}
-              <div className="p-2">
-                <Link
-                  href="/profile"
-                  onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
-                >
-                  <User className="h-4 w-4" />
-
-                  <span>View Profile</span>
-                </Link>
-
-                <Link
-                  href="/settings"
-                  onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
-                >
-                  <Settings className="h-4 w-4" />
-
-                  <span>Account Settings</span>
-                </Link>
-
-                <Link
-                  href="/change-password"
-                  onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
-                >
-                  <Lock className="h-4 w-4" />
-
-                  <span>Change Password</span>
-                </Link>
-              </div>
-
-              {/* Logout */}
-              <div className="border-t border-neutral-200 p-2">
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
-                >
-                  <LogOut className="h-4 w-4" />
-
-                  <span>Logout</span>
-                </button>
-              </div>
+              )}
             </div>
-          )}
+
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Account Slide-Over Drawer */}
+      <AccountDrawer
+        isOpen={accountDrawerOpen}
+        onClose={() => setAccountDrawerOpen(false)}
+        onOpenEditProfile={() => setEditProfileOpen(true)}
+        onOpenChangePassword={() => setChangePasswordOpen(true)}
+      />
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={editProfileOpen}
+        onClose={() => setEditProfileOpen(false)}
+      />
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+      />
+    </>
   );
 }

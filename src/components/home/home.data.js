@@ -85,21 +85,25 @@ export const homeData = {
       title: "Browse Roadmaps",
       description: "Explore learning paths",
       icon: "Roadmaps",
+      href: "/learn/roadmaps",
     },
     {
       title: "Explore Skills",
       description: "Discover new technologies",
       icon: "Skills",
+      href: "/learn/skills",
     },
     {
       title: "Open Notes",
       description: "View and organize notes",
       icon: "Notes",
+      href: "/learn",
     },
     {
       title: "Take Quiz",
       description: "Test your knowledge",
       icon: "Quiz",
+      href: "/learn",
     },
   ],
 };

@@ -33,7 +33,7 @@ export default function ChangePasswordForm() {
           </h2>
 
           <p className="text-sm text-neutral-500">
-            Choose a strong password that you don't use elsewhere.
+            Choose a strong password that you don&apos;t use elsewhere.
           </p>
         </div>
       </div>

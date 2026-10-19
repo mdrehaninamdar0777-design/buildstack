@@ -16,11 +16,6 @@ export default function SearchBar({ className }) {
         aria-label="Search roadmaps, topics, resources"
         className="w-full min-w-0 bg-transparent text-sm text-neutral-700 placeholder:text-neutral-400 focus:outline-none"
       />
-      <kbd className="hidden shrink-0 items-center gap-1 rounded-md border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-500 lg:inline-flex">
-  <span>Ctrl</span>
-  <span>+</span>
-  <span>K</span>
-</kbd>
     </div>
   );
 }

@@ -5,3 +5,6 @@ export { default as SkillsCard } from "./SkillsCard";
 export { default as SocialLinksCard } from "./SocialLinksCard";
 export { default as ProfileLayout } from "./ProfileLayout";
 export { default as ProfileDropdown } from "./ProfileDropdown";
+export { default as AccountDrawer } from "./AccountDrawer";
+export { default as EditProfileModal } from "./EditProfileModal";
+export { default as ChangePasswordModal } from "./ChangePasswordModal";

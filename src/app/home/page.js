@@ -10,8 +10,9 @@ import AppNavbar from "@/components/layout/AppNavbar";
 export default function HomePage() {
     return (
         <main className="min-h-screen bg-white">
-            <div className="mx-auto max-w-[1400px] px-6 py-10 lg:px-10">
-                <AppNavbar />
+            <AppNavbar />
+
+            <div className="mx-auto max-w-[1400px] px-6 py-8 lg:px-10">
 
                 {/* Home page content */}
                 {/* Welcome */}

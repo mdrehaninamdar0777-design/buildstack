@@ -1,21 +1,12 @@
 import RoadmapCard from "./RoadmapCard";
 import { roadmapData } from "./roadmap.data";
 
-export default function RoadmapGrid({
-  roadmaps = roadmapData,
-  variant = "default",
-}) {
+export default function RoadmapGrid({ roadmaps = roadmapData }) {
   return (
-    <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {roadmaps.map((roadmap) => (
-        <RoadmapCard
-          key={roadmap.id}
-          {...roadmap}
-          variant={variant}
-        />
+        <RoadmapCard key={roadmap.id} {...roadmap} />
       ))}
-
-    </section>
+    </div>
   );
 }

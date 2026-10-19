@@ -1,47 +1,47 @@
 import {
   Map,
-  ChartNoAxesColumnIncreasing,
-  UserRound,
   FileText,
+  TrendingUp,
   Bookmark,
-  NotebookPen,
+  LayoutDashboard,
+  CheckSquare,
 } from "lucide-react";
 
 export const features = [
   {
     title: "Structured Roadmaps",
     description:
-      "Step-by-step roadmaps designed by industry experts to take you from beginner to advanced.",
+      "Step-by-step learning paths to go from beginner to job-ready.",
     icon: Map,
-  },
-  {
-    title: "Progress Tracking",
-    description:
-      "Track your progress, monitor streaks, and achieve your learning goals with detailed insights.",
-    icon: ChartNoAxesColumnIncreasing,
-  },
-  {
-    title: "Personal Dashboard",
-    description:
-      "A clean, personalized dashboard to manage your learning, roadmaps, and bookmarks.",
-    icon: UserRound,
   },
   {
     title: "Curated Resources",
     description:
-      "Handpicked tutorials, articles, videos, and documentation from the best sources on the web.",
+      "Handpicked articles, videos, documentation and practice materials.",
     icon: FileText,
   },
   {
-    title: "Bookmarks",
+    title: "Progress Tracking",
     description:
-      "Save important resources, lessons, and notes to revisit anytime you want.",
+      "Track skills, streaks and goals with beautiful analytics.",
+    icon: TrendingUp,
+  },
+  {
+    title: "Bookmarks & Notes",
+    description:
+      "Save important resources and take notes anytime, anywhere.",
     icon: Bookmark,
   },
   {
-    title: "Learning Notes",
+    title: "Smart Dashboard",
     description:
-      "Take, organize, and manage your notes directly inside BuildStack for better revision.",
-    icon: NotebookPen,
+      "All your learning, progress and achievements in one personalized dashboard.",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Practice & Quizzes",
+    description:
+      "Test your knowledge with quizzes and real practice problems.",
+    icon: CheckSquare,
   },
 ];

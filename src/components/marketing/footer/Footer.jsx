@@ -1,120 +1,88 @@
 import Link from "next/link";
+import { BuildStackLogo } from "@/components/shared";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-white px-6 pb-10 pt-16 lg:px-10">
+    <footer className="w-full border-t border-neutral-100 bg-white px-6 pb-12 pt-16 lg:px-10">
       <div className="mx-auto max-w-7xl">
 
         {/* Main Footer */}
-        <div className="grid gap-12 border-b border-neutral-200 pb-12 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-10 pb-12 md:grid-cols-2 lg:grid-cols-5">
 
           {/* Brand */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-1">
+            <BuildStackLogo href="/" size={24} />
 
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2"
-            >
-              <span className="text-xl font-bold text-neutral-900">
-                ◈
-              </span>
-
-              <span className="text-xl font-bold tracking-tight text-neutral-900">
-                BuildStack
-              </span>
-            </Link>
-
-            <p className="mt-4 max-w-xs text-sm leading-6 text-neutral-500">
+            <p className="mt-4 max-w-xs text-xs leading-6 text-neutral-500">
               Your roadmap to becoming a better developer.
             </p>
 
-            {/* Social Icons */}
-            <div className="mt-6 flex items-center gap-4">
-
+            {/* Social Links */}
+            <div className="mt-6 flex items-center gap-4 text-xs font-medium text-neutral-500">
               <a
-                href="#"
-                aria-label="GitHub"
-                className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-neutral-900"
               >
                 GitHub
               </a>
-
               <a
-                href="#"
-                aria-label="LinkedIn"
-                className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-neutral-900"
               >
                 LinkedIn
               </a>
-
               <a
-                href="#"
-                aria-label="X"
-                className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+                href="https://x.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-neutral-900"
               >
-                X
+                X (Twitter)
               </a>
-
               <a
-                href="#"
-                aria-label="YouTube"
-                className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+                href="https://youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-neutral-900"
               >
                 YouTube
               </a>
-
             </div>
-
           </div>
 
           {/* Platform */}
           <div>
-            <h3 className="text-sm font-semibold text-neutral-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900">
               Platform
             </h3>
 
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-4 space-y-2.5 text-xs">
               <li>
-                <Link
-                  href="/"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/" className="text-neutral-500 transition hover:text-neutral-900">
                   Home
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/learn"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/learn" className="text-neutral-500 transition hover:text-neutral-900">
                   Learn
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/roadmaps"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/learn/roadmaps" className="text-neutral-500 transition hover:text-neutral-900">
                   Roadmaps
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/about" className="text-neutral-500 transition hover:text-neutral-900">
                   About
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/contact" className="text-neutral-500 transition hover:text-neutral-900">
                   Contact
                 </Link>
               </li>
@@ -123,43 +91,28 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="text-sm font-semibold text-neutral-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900">
               Resources
             </h3>
 
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-4 space-y-2.5 text-xs">
               <li>
-                <Link
-                  href="/roadmaps"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/learn/roadmaps" className="text-neutral-500 transition hover:text-neutral-900">
                   All Roadmaps
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/bookmarks"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/learn/bookmarks" className="text-neutral-500 transition hover:text-neutral-900">
                   Bookmarks
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/notes"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/learn/domains" className="text-neutral-500 transition hover:text-neutral-900">
                   Notes
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/progress"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/dashboard" className="text-neutral-500 transition hover:text-neutral-900">
                   Progress
                 </Link>
               </li>
@@ -168,44 +121,59 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-sm font-semibold text-neutral-900">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900">
               Legal
             </h3>
 
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-4 space-y-2.5 text-xs">
               <li>
-                <Link
-                  href="/privacy"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/privacy" className="text-neutral-500 transition hover:text-neutral-900">
                   Privacy Policy
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/terms"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/terms" className="text-neutral-500 transition hover:text-neutral-900">
                   Terms of Service
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/refund"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/refund" className="text-neutral-500 transition hover:text-neutral-900">
                   Refund Policy
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/cookies"
-                  className="text-sm text-neutral-500 hover:text-neutral-900"
-                >
+                <Link href="/cookies" className="text-neutral-500 transition hover:text-neutral-900">
                   Cookies
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900">
+              Support
+            </h3>
+
+            <ul className="mt-4 space-y-2.5 text-xs">
+              <li>
+                <Link href="/help" className="text-neutral-500 transition hover:text-neutral-900">
+                  Help Center
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-neutral-500 transition hover:text-neutral-900">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/guides" className="text-neutral-500 transition hover:text-neutral-900">
+                  Guides
+                </Link>
+              </li>
+              <li>
+                <Link href="/feedback" className="text-neutral-500 transition hover:text-neutral-900">
+                  Feedback
                 </Link>
               </li>
             </ul>
@@ -214,16 +182,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col gap-3 pt-6 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
-
-          <p>
-            © 2026 BuildStack.
-          </p>
-
-          <p>
-            All rights reserved.
-          </p>
-
+        <div className="flex flex-col gap-3 border-t border-neutral-100 pt-8 text-xs text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 BuildStack.</p>
+          <p>All rights reserved.</p>
         </div>
 
       </div>

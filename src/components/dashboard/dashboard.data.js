@@ -8,6 +8,12 @@ import {
   Trophy,
 } from "lucide-react";
 
+export const dashboardHeaderData = {
+  title: "Dashboard",
+  description: "Track your learning progress and achievements.",
+  dateRange: "May 12 – May 18, 2025",
+};
+
 export const dashboardStats = [
   {
     id: 1,
@@ -36,149 +42,162 @@ export const dashboardStats = [
   {
     id: 4,
     title: "Current Streak",
-    value: "12 Days",
-    change: "+2 Days",
+    value: "12 days",
+    change: "+2 days",
     description: "vs last week",
     icon: Flame,
   },
 ];
 
 export const weeklyActivityData = [
-  { day: "Mon", hours: 2.5 },
-  { day: "Tue", hours: 3.2 },
-  { day: "Wed", hours: 2.8 },
-  { day: "Thu", hours: 4.5 },
-  { day: "Fri", hours: 5.3 },
-  { day: "Sat", hours: 4.8 },
-  { day: "Sun", hours: 3.6 },
+  { day: "Mon", hours: 9.2 },
+  { day: "Tue", hours: 12.1 },
+  { day: "Wed", hours: 14.8 },
+  { day: "Thu", hours: 8.3 },
+  { day: "Fri", hours: 16.7 },
+  { day: "Sat", hours: 18.9 },
+  { day: "Sun", hours: 7.6 },
 ];
 
-
+export const weeklyActivitySummary = {
+  title: "Great job! You learned 18% more this week.",
+  description: "Keep up the momentum!",
+  actionLabel: "View Insights",
+};
 
 export const achievements = [
   {
     id: 1,
     title: "First Roadmap Completed",
-    description: "Completed the React Roadmap",
-    earnedAt: "15 May 2026",
+    description: "Completed your first roadmap",
+    earnedAt: "May 15, 2025",
     icon: Trophy,
-    iconContainerClassName: "bg-yellow-100",
-    iconClassName: "text-yellow-600",
+    iconContainerClassName: "bg-amber-100",
+    iconClassName: "text-amber-600",
   },
   {
     id: 2,
     title: "12 Day Streak",
-    description: "Learned continuously for 12 days",
-    earnedAt: "18 May 2026",
+    description: "Keep learning every day",
+    earnedAt: "May 18, 2025",
     icon: Flame,
-    iconContainerClassName: "bg-orange-100",
-    iconClassName: "text-orange-600",
+    iconContainerClassName: "bg-blue-100",
+    iconClassName: "text-blue-600",
   },
   {
     id: 3,
     title: "100 Lessons Completed",
     description: "Completed 100 lessons",
-    earnedAt: "20 May 2026",
+    earnedAt: "May 14, 2025",
     icon: Target,
-    iconContainerClassName: "bg-green-100",
-    iconClassName: "text-green-600",
+    iconContainerClassName: "bg-emerald-100",
+    iconClassName: "text-emerald-600",
   },
   {
     id: 4,
-    title: "Top Performer",
-    description: "Top 10% this month",
-    earnedAt: "25 May 2026",
+    title: "90% Quiz Accuracy",
+    description: "Scored 90% or more in a quiz",
+    earnedAt: "May 12, 2025",
     icon: Award,
-    iconContainerClassName: "bg-blue-100",
-    iconClassName: "text-blue-600",
+    iconContainerClassName: "bg-indigo-100",
+    iconClassName: "text-indigo-600",
   },
 ];
 
 export const activeRoadmaps = [
   {
     id: 1,
-    title: "React.js",
-    level: "Intermediate",
-    progress: 68,
+    title: "Frontend Developer",
+    modules: "26 / 62 modules",
+    progress: 42,
   },
   {
     id: 2,
-    title: "Node.js",
-    level: "Beginner",
-    progress: 35,
+    title: "Backend Developer",
+    modules: "12 / 65 modules",
+    progress: 18,
   },
   {
     id: 3,
-    title: "MongoDB",
-    level: "Intermediate",
-    progress: 82,
+    title: "AI Fundamentals",
+    modules: "5 / 58 modules",
+    progress: 8,
   },
 ];
 
 export const skillProgressData = [
   {
     id: 1,
-    name: "HTML",
-    level: "Advanced",
-    progress: 95,
+    name: "React",
+    progress: 70,
+    color: "bg-blue-500",
   },
   {
     id: 2,
-    name: "CSS",
-    level: "Advanced",
+    name: "JavaScript",
     progress: 90,
+    color: "bg-amber-500",
   },
   {
     id: 3,
-    name: "JavaScript",
-    level: "Intermediate",
-    progress: 80,
+    name: "Node.js",
+    progress: 35,
+    color: "bg-emerald-500",
   },
   {
     id: 4,
-    name: "React",
-    level: "Intermediate",
-    progress: 65,
+    name: "MongoDB",
+    progress: 20,
+    color: "bg-green-600",
+  },
+  {
+    id: 5,
+    name: "TypeScript",
+    progress: 60,
+    color: "bg-blue-600",
   },
 ];
 
 export const activityFeedData = [
   {
     id: 1,
-    title: "Completed React Hooks",
-    description: "Finished the React Hooks module.",
-    time: "2 hours ago",
+    title: 'Completed "React Hooks" lesson',
+    type: "react",
+    time: "2h ago",
   },
   {
     id: 2,
-    title: "Started Node.js Roadmap",
-    description: "Began the Backend Development roadmap.",
-    time: "Yesterday",
+    title: 'Added notes for "Flexbox in CSS"',
+    type: "notes",
+    time: "5h ago",
   },
   {
     id: 3,
-    title: "Achievement Unlocked",
-    description: "Earned the 12 Day Streak badge.",
+    title: "Scored 9/10 in JavaScript Quiz",
+    type: "js",
+    time: "Yesterday",
+  },
+  {
+    id: 4,
+    title: 'Started "Docker Basics"',
+    type: "docker",
+    time: "Yesterday",
+  },
+  {
+    id: 5,
+    title: 'Completed "Git & GitHub" lesson',
+    type: "git",
     time: "2 days ago",
   },
 ];
-export const weeklyActivitySummary = {
-  title: "Great job! You're improving.",
-  description: "You learned 18% more compared to last week.",
-  actionLabel: "View Insights",
-};
+
 export const learningCalendarData = {
-  month: "May 2026",
+  month: "May 2025",
   weeks: [
-    [0, 0, 1, 2, 0, 3, 1],
-    [1, 0, 2, 0, 1, 4, 2],
-    [2, 1, 0, 3, 2, 1, 4],
-    [0, 2, 1, 0, 4, 3, 2],
-    [1, 0, 2, 4, 2, 1, 3],
+    [0, 1, 0, 1, 2, 0, 1],
+    [0, 1, 1, 1, 2, 3, 2],
+    [1, 1, 2, 3, 1, 2, 3],
+    [1, 1, 1, 3, 1, 1, 2],
+    [1, 1, 2, 1, 2, 1, 0],
   ],
-};
-export const dashboardHeaderData = {
-  title: "Dashboard",
-  description: "Track your learning progress and achievements.",
-  dateRange: "May 12 – May 18, 2026",
 };
