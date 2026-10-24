@@ -1,31 +1,38 @@
+
 import admin from "firebase-admin";
 
 /**
  * Initializes Firebase Admin SDK using server-side environment variables.
- * Ensures single initialization and properly formats multi-line private keys.
+ * Supports escaped newlines in private keys and prevents duplicate initialization.
  */
-let isInitialized = false;
-
 export function initializeFirebaseAdmin() {
+  // Reuse an existing Firebase Admin app if already initialized.
   if (admin.apps.length > 0) {
-    isInitialized = true;
     return admin;
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+  const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim();
+  const rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY;
 
-  if (!projectId || !clientEmail || !privateKey) {
+  if (!projectId || !clientEmail || !rawPrivateKey) {
     console.warn(
-      "[Firebase Admin Warning] Missing FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, or FIREBASE_PRIVATE_KEY. Firebase Admin SDK initialization skipped."
+      "[Firebase Admin] Initialization skipped: required environment variables are missing."
     );
     return null;
   }
 
-  // Handle escaped newline characters in .env string
-  if (privateKey.includes("\\n")) {
-    privateKey = privateKey.replace(/\\n/g, "\n");
+  // Convert literal "\n" sequences from .env into actual newline characters.
+  const privateKey = rawPrivateKey.replace(/\\n/g, "\n").trim();
+
+  if (
+    !privateKey.includes("-----BEGIN PRIVATE KEY-----") ||
+    !privateKey.includes("-----END PRIVATE KEY-----")
+  ) {
+    console.error(
+      "[Firebase Admin] Initialization failed: private key format is invalid."
+    );
+    return null;
   }
 
   try {
@@ -37,15 +44,24 @@ export function initializeFirebaseAdmin() {
       }),
     });
 
-    isInitialized = true;
-    console.log(`[Firebase Admin] Initialized successfully for project: ${projectId}`);
+    console.log(
+      `[Firebase Admin] Initialized successfully for project: ${projectId}`
+    );
+
     return admin;
-  } catch (error) {
-    console.error(`[Firebase Admin Error] Initialization failed: ${error.message}`);
+  } catch {
+    // Do not log credentials or raw configuration details.
+    console.error(
+      "[Firebase Admin] Initialization failed. Check the service-account credentials and private-key formatting."
+    );
+
     return null;
   }
 }
 
+/**
+ * Returns whether Firebase Admin has been initialized.
+ */
 export function isFirebaseAdminReady() {
   return admin.apps.length > 0;
 }
