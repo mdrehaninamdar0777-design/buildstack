@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import AppNavbar from "@/components/layout/AppNavbar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { getUnifiedSearchIndex } from "@/data/learn/searchCatalog";
 
 import {
   SearchHeader,
@@ -12,102 +13,6 @@ import {
   SearchFilters,
   SearchResultCard,
 } from "@/components/search";
-
-const searchData = [
-  {
-    id: 1,
-    type: "Roadmaps",
-    title: "Frontend Developer Roadmap",
-    description:
-      "Learn HTML, CSS, JavaScript, React, and modern frontend development step by step.",
-    level: "Intermediate",
-    duration: "12 Weeks",
-    progress: 42,
-  },
-  {
-    id: 2,
-    type: "Roadmaps",
-    title: "Backend Developer Roadmap",
-    description:
-      "Build backend development skills with Node.js, Express.js, APIs, databases, and authentication.",
-    level: "Beginner",
-    duration: "8 Weeks",
-    progress: 30,
-  },
-  {
-    id: 3,
-    type: "Roadmaps",
-    title: "Full Stack Developer Roadmap",
-    description:
-      "Learn frontend, backend, databases, APIs, deployment, and full-stack application development.",
-    level: "Intermediate",
-    duration: "16 Weeks",
-    progress: 25,
-  },
-  {
-    id: 4,
-    type: "Skills",
-    title: "React.js",
-    description:
-      "Build interactive user interfaces using components, props, state, hooks, and modern React.",
-    level: "Intermediate",
-    duration: "24 Lessons",
-  },
-  {
-    id: 5,
-    type: "Skills",
-    title: "JavaScript",
-    description:
-      "Strengthen your JavaScript fundamentals including functions, objects, arrays, promises, and ES6+.",
-    level: "Intermediate",
-    duration: "32 Lessons",
-  },
-  {
-    id: 6,
-    type: "Skills",
-    title: "Node.js",
-    description:
-      "Learn server-side JavaScript, APIs, modules, asynchronous programming, and backend development.",
-    level: "Beginner",
-    duration: "20 Lessons",
-  },
-  {
-    id: 7,
-    type: "Topics",
-    title: "React Hooks",
-    description:
-      "Understand useState, useEffect, useContext, custom hooks, and modern React patterns.",
-    level: "Intermediate",
-    duration: "12 Lessons",
-  },
-  {
-    id: 8,
-    type: "Topics",
-    title: "REST APIs",
-    description:
-      "Learn how REST APIs work and how frontend applications communicate with backend services.",
-    level: "Beginner",
-    duration: "8 Lessons",
-  },
-  {
-    id: 9,
-    type: "Resources",
-    title: "JavaScript Practice Exercises",
-    description:
-      "Practice JavaScript concepts with coding exercises designed to strengthen your fundamentals.",
-    level: "Beginner",
-    duration: "25 Exercises",
-  },
-  {
-    id: 10,
-    type: "Resources",
-    title: "React Hooks Notes",
-    description:
-      "Quick reference notes covering the most important React Hooks and their practical usage.",
-    level: "Intermediate",
-    duration: "10 min read",
-  },
-];
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -121,10 +26,13 @@ function SearchContent() {
     setSearchQuery(initialQuery);
   }
 
+  // Load the unified catalog covering all roadmaps, skills, and domains
+  const allItems = useMemo(() => getUnifiedSearchIndex(), []);
+
   const filteredResults = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    return searchData.filter((result) => {
+    return allItems.filter((result) => {
       const matchesFilter =
         activeFilter === "All" || result.type === activeFilter;
 
@@ -133,11 +41,13 @@ function SearchContent() {
         result.title.toLowerCase().includes(query) ||
         result.description.toLowerCase().includes(query) ||
         result.type.toLowerCase().includes(query) ||
-        result.level?.toLowerCase().includes(query);
+        result.category?.toLowerCase().includes(query) ||
+        result.level?.toLowerCase().includes(query) ||
+        result.technologies?.some((t) => t.toLowerCase().includes(query));
 
       return matchesFilter && matchesSearch;
     });
-  }, [searchQuery, activeFilter]);
+  }, [allItems, searchQuery, activeFilter]);
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10 lg:px-8">
@@ -162,7 +72,7 @@ function SearchContent() {
             {searchQuery
               ? "Search Results"
               : activeFilter === "All"
-              ? "Explore"
+              ? "Explore Catalog"
               : activeFilter}
           </h2>
 

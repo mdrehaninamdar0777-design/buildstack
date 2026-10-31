@@ -21,11 +21,18 @@ import {
   ChangePasswordModal,
 } from "@/components/profile";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function AppNavbar({ onToggleMobileSidebar }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
+  const {
+    displayName: profileDisplayName,
+    photoURL,
+    initials,
+    dbProfile,
+  } = useUserProfile();
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false);
@@ -60,10 +67,12 @@ export default function AppNavbar({ onToggleMobileSidebar }) {
     }
   };
 
-  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
-  const fullName = user?.displayName || user?.email?.split("@")[0] || "Developer";
-  const userInitial = (displayName?.[0] || "U").toUpperCase();
+  const displayName = profileDisplayName || user?.displayName || user?.email?.split("@")[0] || "User";
+  const fullName = displayName;
+  const userInitial = initials || (displayName?.[0] || "U").toUpperCase();
   const userEmail = user?.email || "";
+  const avatarImage = photoURL || user?.photoURL || null;
+  const streakDays = dbProfile?.learningStats?.streakDays || 0;
 
   return (
     <>
@@ -144,7 +153,7 @@ export default function AppNavbar({ onToggleMobileSidebar }) {
             {/* Streak Pill */}
             <div className="flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs font-semibold text-neutral-800">
               <Flame className="h-4 w-4 fill-orange-500 text-orange-500" />
-              <span>12</span>
+              <span>{streakDays}</span>
             </div>
 
             {/* Theme / Light-Dark Toggle Button */}
@@ -166,9 +175,10 @@ export default function AppNavbar({ onToggleMobileSidebar }) {
                   aria-expanded={profileDropdownOpen}
                   aria-haspopup="menu"
                 >
-                  {user.photoURL ? (
+                  {avatarImage ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                      src={user.photoURL}
+                      src={avatarImage}
                       alt={displayName}
                       className="h-9 w-9 rounded-full object-cover shadow-xs"
                     />

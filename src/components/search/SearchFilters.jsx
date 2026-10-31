@@ -6,8 +6,7 @@ export default function SearchFilters({
     "All",
     "Roadmaps",
     "Skills",
-    "Topics",
-    "Resources",
+    "Domains",
   ];
 
   return (

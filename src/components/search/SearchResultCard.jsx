@@ -1,8 +1,10 @@
+import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
   Code2,
   FileText,
+  Globe,
   Map,
   PlayCircle,
 } from "lucide-react";
@@ -10,6 +12,7 @@ import {
 const typeIcons = {
   Roadmaps: Map,
   Skills: Code2,
+  Domains: Globe,
   Topics: BookOpen,
   Resources: FileText,
 };
@@ -18,9 +21,11 @@ export default function SearchResultCard({ result }) {
   const Icon = typeIcons[result.type] || PlayCircle;
 
   return (
-    <article className="group rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-300 hover:shadow-sm">
+    <Link
+      href={result.href || "#"}
+      className="group block rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-300 hover:shadow-sm"
+    >
       <div className="flex items-start gap-4">
-
         {/* Icon */}
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-neutral-100">
           <Icon className="h-5 w-5 text-neutral-700" />
@@ -28,9 +33,8 @@ export default function SearchResultCard({ result }) {
 
         {/* Content */}
         <div className="min-w-0 flex-1">
-
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-semibold text-neutral-900">
+            <h3 className="font-semibold text-neutral-900 group-hover:text-black">
               {result.title}
             </h3>
 
@@ -43,8 +47,13 @@ export default function SearchResultCard({ result }) {
             {result.description}
           </p>
 
-          {/* Additional information */}
+          {/* Additional metadata */}
           <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-neutral-500">
+            {result.category && (
+              <span className="font-medium text-neutral-600">
+                {result.category}
+              </span>
+            )}
 
             {result.level && (
               <span className="rounded-full border border-neutral-200 px-2.5 py-1">
@@ -53,9 +62,7 @@ export default function SearchResultCard({ result }) {
             )}
 
             {result.duration && (
-              <span>
-                {result.duration}
-              </span>
+              <span>{result.duration}</span>
             )}
 
             {result.progress !== undefined && (
@@ -68,7 +75,6 @@ export default function SearchResultCard({ result }) {
                     }}
                   />
                 </div>
-
                 <span>{result.progress}%</span>
               </div>
             )}
@@ -76,14 +82,13 @@ export default function SearchResultCard({ result }) {
         </div>
 
         {/* Arrow */}
-        <button
-          type="button"
+        <div
           className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition group-hover:border-neutral-300 group-hover:text-neutral-900"
-          aria-label={`Open ${result.title}`}
+          aria-hidden="true"
         >
           <ArrowRight className="h-4 w-4" />
-        </button>
+        </div>
       </div>
-    </article>
+    </Link>
   );
 }
