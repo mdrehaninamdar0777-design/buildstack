@@ -213,6 +213,191 @@ export async function getDashboardStats(token = null) {
   });
 }
 
+// ── Roadmaps ──────────────────────────────────────────────────────────────────
+
+export async function getMyRoadmaps(token = null) {
+  return await apiFetch("/api/roadmaps/my", { method: "GET", token, requiresAuth: true });
+}
+
+export async function enrollRoadmap(roadmapId, payload = {}, token = null) {
+  return await apiFetch(`/api/roadmaps/${roadmapId}/enroll`, {
+    method: "POST",
+    body: payload,
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function unenrollRoadmap(roadmapId, token = null) {
+  return await apiFetch(`/api/roadmaps/${roadmapId}/enroll`, {
+    method: "DELETE",
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function toggleLesson(roadmapId, lessonId, payload = {}, token = null) {
+  return await apiFetch(`/api/roadmaps/${roadmapId}/lessons/${lessonId}/toggle`, {
+    method: "POST",
+    body: payload,
+    token,
+    requiresAuth: true,
+  });
+}
+
+// ── Bookmarks ─────────────────────────────────────────────────────────────────
+
+export async function getBookmarks(token = null) {
+  return await apiFetch("/api/users/bookmarks", { method: "GET", token, requiresAuth: true });
+}
+
+export async function addBookmark(payload = {}, token = null) {
+  return await apiFetch("/api/users/bookmarks", {
+    method: "POST",
+    body: payload,
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function removeBookmark(bookmarkId, token = null) {
+  return await apiFetch(`/api/users/bookmarks/${bookmarkId}`, {
+    method: "DELETE",
+    token,
+    requiresAuth: true,
+  });
+}
+
+// ── Notes ─────────────────────────────────────────────────────────────────────
+
+export async function getNotes(params = {}, token = null) {
+  const query = new URLSearchParams(params).toString();
+  const endpoint = query ? `/api/notes?${query}` : "/api/notes";
+  return await apiFetch(endpoint, { method: "GET", token, requiresAuth: true });
+}
+
+export async function getNoteById(noteId, token = null) {
+  return await apiFetch(`/api/notes/${noteId}`, { method: "GET", token, requiresAuth: true });
+}
+
+export async function createNote(payload = {}, token = null) {
+  return await apiFetch("/api/notes", {
+    method: "POST",
+    body: payload,
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function updateNote(noteId, payload = {}, token = null) {
+  return await apiFetch(`/api/notes/${noteId}`, {
+    method: "PUT",
+    body: payload,
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function deleteNote(noteId, token = null) {
+  return await apiFetch(`/api/notes/${noteId}`, {
+    method: "DELETE",
+    token,
+    requiresAuth: true,
+  });
+}
+
+// ── Quizzes ───────────────────────────────────────────────────────────────────
+
+export async function getQuizzes(params = {}, token = null) {
+  const query = new URLSearchParams(params).toString();
+  const endpoint = query ? `/api/quizzes?${query}` : "/api/quizzes";
+  return await apiFetch(endpoint, { method: "GET", token, requiresAuth: true });
+}
+
+export async function getQuizById(quizId, token = null) {
+  return await apiFetch(`/api/quizzes/${quizId}`, { method: "GET", token, requiresAuth: true });
+}
+
+export async function submitQuiz(quizId, answers = [], token = null) {
+  return await apiFetch(`/api/quizzes/${quizId}/submit`, {
+    method: "POST",
+    body: { answers },
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function getQuizAttempts(quizId, token = null) {
+  return await apiFetch(`/api/quizzes/${quizId}/attempts`, {
+    method: "GET",
+    token,
+    requiresAuth: true,
+  });
+}
+
+// ── Practice ──────────────────────────────────────────────────────────────────
+
+export async function getPracticeQuestions(params = {}, token = null) {
+  const query = new URLSearchParams(params).toString();
+  const endpoint = query ? `/api/practice?${query}` : "/api/practice";
+  return await apiFetch(endpoint, { method: "GET", token, requiresAuth: true });
+}
+
+export async function getPracticeQuestionById(questionId, token = null) {
+  return await apiFetch(`/api/practice/${questionId}`, {
+    method: "GET",
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function submitPracticeAnswer(questionId, answer, token = null) {
+  return await apiFetch(`/api/practice/${questionId}/submit`, {
+    method: "POST",
+    body: { answer },
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function getPracticeHistory(token = null) {
+  return await apiFetch("/api/practice/my/history", {
+    method: "GET",
+    token,
+    requiresAuth: true,
+  });
+}
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+
+export async function getNotifications(token = null) {
+  return await apiFetch("/api/notifications", { method: "GET", token, requiresAuth: true });
+}
+
+export async function markNotificationAsRead(notificationId, token = null) {
+  return await apiFetch(`/api/notifications/${notificationId}/read`, {
+    method: "PATCH",
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function markAllNotificationsAsRead(token = null) {
+  return await apiFetch("/api/notifications/read-all", {
+    method: "PATCH",
+    token,
+    requiresAuth: true,
+  });
+}
+
+export async function deleteNotification(notificationId, token = null) {
+  return await apiFetch(`/api/notifications/${notificationId}`, {
+    method: "DELETE",
+    token,
+    requiresAuth: true,
+  });
+}
+
 const api = {
   apiFetch,
   getAuthToken,
@@ -220,6 +405,30 @@ const api = {
   getCurrentUserProfile,
   updateUserProfile,
   getDashboardStats,
+  getMyRoadmaps,
+  enrollRoadmap,
+  unenrollRoadmap,
+  toggleLesson,
+  getBookmarks,
+  addBookmark,
+  removeBookmark,
+  getNotes,
+  getNoteById,
+  createNote,
+  updateNote,
+  deleteNote,
+  getQuizzes,
+  getQuizById,
+  submitQuiz,
+  getQuizAttempts,
+  getPracticeQuestions,
+  getPracticeQuestionById,
+  submitPracticeAnswer,
+  getPracticeHistory,
+  getNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  deleteNotification,
 };
 
 export default api;

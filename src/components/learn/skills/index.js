@@ -10,3 +10,6 @@ export { default as NotesSection } from "./NotesSection";
 export { default as SkillResourceCards } from "./SkillResourceCards";
 export { default as SkillComingSoon } from "./SkillComingSoon";
 export { default as SkillNavigation } from "./SkillNavigation";
+export { default as QuizRunner } from "./QuizRunner";
+export { default as PracticeRunner } from "./PracticeRunner";
+export { default as ResourceCatalogTab } from "./ResourceCatalogTab";

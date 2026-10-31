@@ -1,0 +1,248 @@
+/**
+ * Curated, verified learning resources catalog for BuildStack V1.
+ * Only real, trusted platforms and official documentation.
+ */
+
+export const curatedResources = [
+  // ── HTML ──────────────────────────────────────────────────────────────────
+  {
+    id: "html-mdn-basics",
+    skillSlug: "html",
+    title: "MDN Web Docs: HTML Structuring the Web",
+    type: "documentation",
+    source: "MDN Web Docs",
+    url: "https://developer.mozilla.org/en-US/docs/Learn/HTML",
+    duration: "10 Hours",
+    difficulty: "Beginner",
+    description: "The gold standard documentation for semantic HTML, document outlines, forms, and accessibility.",
+  },
+  {
+    id: "html-fcc-course",
+    skillSlug: "html",
+    title: "Responsive Web Design Certification",
+    type: "tutorial",
+    source: "freeCodeCamp",
+    url: "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
+    duration: "30 Hours",
+    difficulty: "Beginner",
+    description: "Hands-on, project-based interactive curriculum teaching modern semantic HTML and responsive layouts.",
+  },
+  {
+    id: "html-fcc-video",
+    skillSlug: "html",
+    title: "HTML Full Course for Beginners",
+    type: "video",
+    source: "freeCodeCamp YouTube",
+    url: "https://www.youtube.com/watch?v=kUMe1FH4CHE",
+    duration: "2 Hours",
+    difficulty: "Beginner",
+    description: "Comprehensive step-by-step video lecture covering tags, attributes, tables, and forms.",
+  },
+
+  // ── CSS ───────────────────────────────────────────────────────────────────
+  {
+    id: "css-mdn-core",
+    skillSlug: "css",
+    title: "MDN Web Docs: CSS Styling the Web",
+    type: "documentation",
+    source: "MDN Web Docs",
+    url: "https://developer.mozilla.org/en-US/docs/Learn/CSS",
+    duration: "15 Hours",
+    difficulty: "Beginner to Intermediate",
+    description: "Complete guide to the CSS box model, Flexbox, CSS Grid, animations, and responsive media queries.",
+  },
+  {
+    id: "css-flexbox-guide",
+    skillSlug: "css",
+    title: "CSS-Tricks: A Complete Guide to Flexbox",
+    type: "documentation",
+    source: "CSS-Tricks",
+    url: "https://css-tricks.com/snippets/css/a-guide-to-flexbox/",
+    duration: "1 Hour",
+    difficulty: "Beginner",
+    description: "Visual, authoritative reference guide to every parent and child Flexbox property.",
+  },
+  {
+    id: "css-grid-guide",
+    skillSlug: "css",
+    title: "CSS-Tricks: A Complete Guide to CSS Grid",
+    type: "documentation",
+    source: "CSS-Tricks",
+    url: "https://css-tricks.com/snippets/css/complete-guide-grid/",
+    duration: "1 Hour",
+    difficulty: "Intermediate",
+    description: "Comprehensive visual guide to CSS Grid layout, template areas, and fractions.",
+  },
+  {
+    id: "css-traversy-video",
+    skillSlug: "css",
+    title: "CSS Crash Course for Absolute Beginners",
+    type: "video",
+    source: "Traversy Media",
+    url: "https://www.youtube.com/watch?v=yfoY53QXEnI",
+    duration: "1.5 Hours",
+    difficulty: "Beginner",
+    description: "Fast-paced video overview of selectors, margins, padding, typography, and positions.",
+  },
+
+  // ── JavaScript ────────────────────────────────────────────────────────────
+  {
+    id: "js-javascript-info",
+    skillSlug: "javascript",
+    title: "The Modern JavaScript Tutorial (javascript.info)",
+    type: "documentation",
+    source: "JavaScript.info",
+    url: "https://javascript.info/",
+    duration: "40 Hours",
+    difficulty: "Beginner to Advanced",
+    description: "In-depth, academic yet accessible guide from closures and prototypes to event loops and async/await.",
+  },
+  {
+    id: "js-mdn-guide",
+    skillSlug: "javascript",
+    title: "MDN Web Docs: JavaScript Guide & Reference",
+    type: "documentation",
+    source: "MDN Web Docs",
+    url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+    duration: "25 Hours",
+    difficulty: "Intermediate",
+    description: "Authoritative specification and developer guide to ECMAScript standard syntax and APIs.",
+  },
+  {
+    id: "js-fso-part1",
+    skillSlug: "javascript",
+    title: "Full Stack Open: Fundamentals of Web Apps",
+    type: "tutorial",
+    source: "University of Helsinki",
+    url: "https://fullstackopen.com/en/part0",
+    duration: "10 Hours",
+    difficulty: "Beginner",
+    description: "Renowned university curriculum covering the HTTP network model and modern JavaScript execution.",
+  },
+  {
+    id: "js-fireship-video",
+    skillSlug: "javascript",
+    title: "JavaScript in 100 Seconds",
+    type: "video",
+    source: "Fireship",
+    url: "https://www.youtube.com/watch?v=DHjqpvDnNGE",
+    duration: "2 Minutes",
+    difficulty: "Beginner",
+    description: "High-level visual breakdown of JavaScript language features, runtime and history.",
+  },
+
+  // ── React ─────────────────────────────────────────────────────────────────
+  {
+    id: "react-official-docs",
+    skillSlug: "react",
+    title: "React Official Documentation (react.dev)",
+    type: "documentation",
+    source: "React Team",
+    url: "https://react.dev/",
+    duration: "20 Hours",
+    difficulty: "Beginner to Advanced",
+    description: "The official interactive guide to Thinking in React, Hooks, state preservation, and server components.",
+  },
+  {
+    id: "react-fullstackopen",
+    skillSlug: "react",
+    title: "Full Stack Open: Introduction to React",
+    type: "tutorial",
+    source: "University of Helsinki",
+    url: "https://fullstackopen.com/en/part1",
+    duration: "15 Hours",
+    difficulty: "Intermediate",
+    description: "Rigorous deep-dive into component state, event handlers, and complex state management.",
+  },
+  {
+    id: "react-fcc-video",
+    skillSlug: "react",
+    title: "React 18 / 19 Full Course 2024",
+    type: "video",
+    source: "freeCodeCamp YouTube",
+    url: "https://www.youtube.com/watch?v=bMknfKXIFA8",
+    duration: "12 Hours",
+    difficulty: "Intermediate",
+    description: "Comprehensive project-driven React masterclass covering hooks, custom hooks, and context.",
+  },
+
+  // ── Node.js ───────────────────────────────────────────────────────────────
+  {
+    id: "node-official-docs",
+    skillSlug: "node-js",
+    title: "Node.js Official Documentation & Guides",
+    type: "documentation",
+    source: "Node.js Foundation",
+    url: "https://nodejs.org/en/learn",
+    duration: "20 Hours",
+    difficulty: "Intermediate",
+    description: "Official guides covering asynchronous I/O, event emitters, buffer management, and streams.",
+  },
+  {
+    id: "express-official-guide",
+    skillSlug: "node-js",
+    title: "Express.js Fast, Unopinionated Web Framework",
+    type: "documentation",
+    source: "Express.js",
+    url: "https://expressjs.com/",
+    duration: "10 Hours",
+    difficulty: "Intermediate",
+    description: "Core reference for Express routing, middleware pipelines, error handlers, and templates.",
+  },
+  {
+    id: "node-fcc-video",
+    skillSlug: "node-js",
+    title: "Node.js and Express.js Full Course",
+    type: "video",
+    source: "freeCodeCamp YouTube",
+    url: "https://www.youtube.com/watch?v=Oe421EPjeBE",
+    duration: "8 Hours",
+    difficulty: "Intermediate",
+    description: "Build robust backend microservices, REST APIs, and database-connected web servers.",
+  },
+
+  // ── Git & GitHub ──────────────────────────────────────────────────────────
+  {
+    id: "git-scm-book",
+    skillSlug: "git",
+    title: "Pro Git Book (Free Online Edition)",
+    type: "documentation",
+    source: "Git-SCM",
+    url: "https://git-scm.com/book/en/v2",
+    duration: "15 Hours",
+    difficulty: "Beginner to Advanced",
+    description: "The authoritative book on Git branching, merging, rebasing, and internals written by Scott Chacon.",
+  },
+  {
+    id: "git-fcc-video",
+    skillSlug: "git",
+    title: "Git and GitHub for Beginners - Crash Course",
+    type: "video",
+    source: "freeCodeCamp YouTube",
+    url: "https://www.youtube.com/watch?v=RGOj5yH7evk",
+    duration: "1 Hour",
+    difficulty: "Beginner",
+    description: "Hands-on terminal workflow tutorial covering commit, push, pull, branches, and merge conflicts.",
+  },
+
+  // ── MongoDB ───────────────────────────────────────────────────────────────
+  {
+    id: "mongo-university",
+    skillSlug: "mongodb",
+    title: "MongoDB University - Free Courses",
+    type: "documentation",
+    source: "MongoDB Inc.",
+    url: "https://learn.mongodb.com/",
+    duration: "12 Hours",
+    difficulty: "Intermediate",
+    description: "Official interactive certifications on document modeling, aggregation pipelines, and indexing.",
+  },
+];
+
+export function getResourcesBySkill(skillSlug, type = null) {
+  return curatedResources.filter((r) => {
+    const matchesSkill = r.skillSlug === skillSlug;
+    const matchesType = !type || r.type === type;
+    return matchesSkill && matchesType;
+  });
+}

@@ -62,6 +62,14 @@ const enrolledRoadmapSchema = new Schema(
       type: Number,
       default: 0,
     },
+    completedLessons: {
+      type: [String],
+      default: [],
+    },
+    totalLessons: {
+      type: Number,
+      default: 0,
+    },
     enrolledAt: {
       type: Date,
       default: Date.now,
@@ -264,6 +272,26 @@ const userSchema = new Schema(
 
     achievements: {
       type: [achievementSchema],
+      default: [],
+    },
+
+    bookmarks: {
+      type: [
+        new Schema(
+          {
+            id: { type: String, required: true },
+            type: { type: String, required: true },
+            title: { type: String, required: true },
+            category: { type: String, default: "" },
+            level: { type: String, default: "" },
+            progress: { type: Number, default: 0 },
+            href: { type: String, required: true },
+            savedOn: { type: String, default: "" },
+            createdAt: { type: Date, default: Date.now },
+          },
+          { _id: false }
+        ),
+      ],
       default: [],
     },
   },

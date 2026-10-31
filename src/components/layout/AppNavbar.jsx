@@ -20,6 +20,7 @@ import {
   EditProfileModal,
   ChangePasswordModal,
 } from "@/components/profile";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 
@@ -155,6 +156,9 @@ export default function AppNavbar({ onToggleMobileSidebar }) {
               <Flame className="h-4 w-4 fill-orange-500 text-orange-500" />
               <span>{streakDays}</span>
             </div>
+
+            {/* In-app Notification Bell */}
+            <NotificationBell />
 
             {/* Theme / Light-Dark Toggle Button */}
             <button

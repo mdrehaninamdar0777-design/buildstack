@@ -42,7 +42,7 @@ const navigation = [
   {
     label: "Notes",
     icon: FileText,
-    href: "/dashboard",
+    href: "/notes",
   },
 ];
 

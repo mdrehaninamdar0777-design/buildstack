@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/auth.js";
 import { syncUser, getMe, updateMe, getDashboardStats } from "../controllers/userController.js";
+import {
+  getBookmarks,
+  addBookmark,
+  removeBookmark,
+} from "../controllers/bookmarkController.js";
 
 const router = Router();
 
@@ -31,5 +36,26 @@ router.get("/me/dashboard", verifyToken, getDashboardStats);
  * @access  Protected
  */
 router.put("/me", verifyToken, updateMe);
+
+/**
+ * @route   GET /api/users/bookmarks
+ * @desc    Retrieve all saved bookmarks for the authenticated user
+ * @access  Protected
+ */
+router.get("/bookmarks", verifyToken, getBookmarks);
+
+/**
+ * @route   POST /api/users/bookmarks
+ * @desc    Add a bookmark for the authenticated user
+ * @access  Protected
+ */
+router.post("/bookmarks", verifyToken, addBookmark);
+
+/**
+ * @route   DELETE /api/users/bookmarks/:id
+ * @desc    Remove a bookmark for the authenticated user
+ * @access  Protected
+ */
+router.delete("/bookmarks/:id", verifyToken, removeBookmark);
 
 export default router;

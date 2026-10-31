@@ -10,6 +10,9 @@ import {
   SkillResourceCards,
   SkillComingSoon,
   SkillNavigation,
+  QuizRunner,
+  PracticeRunner,
+  ResourceCatalogTab,
 } from "@/components/learn/skills";
 
 import { skills } from "@/data/learn/skills.data";
@@ -72,24 +75,20 @@ export default function SkillDetailPage({ params }) {
           <NotesSection notes={skill.notes} />
         )}
 
-        {activeTab !== "notes" && (
-          <div className="p-5">
-            <div className="rounded-xl border border-neutral-200 bg-white px-6 py-12 text-center">
-              <h3 className="text-lg font-semibold text-neutral-900">
-                {activeTab === "videos"
-                  ? "Video Lectures"
-                  : activeTab === "documentation"
-                    ? "Documentation"
-                    : activeTab === "quiz"
-                      ? "Quiz"
-                      : "Practice"}
-              </h3>
+        {activeTab === "documentation" && (
+          <ResourceCatalogTab skillSlug={skill.slug} type="documentation" />
+        )}
 
-              <p className="mt-2 text-sm text-neutral-500">
-                This section is ready for the actual learning content.
-              </p>
-            </div>
-          </div>
+        {activeTab === "videos" && (
+          <ResourceCatalogTab skillSlug={skill.slug} type="video" />
+        )}
+
+        {activeTab === "quiz" && (
+          <QuizRunner skillSlug={skill.slug} skillTitle={skill.name} />
+        )}
+
+        {activeTab === "practice" && (
+          <PracticeRunner skillSlug={skill.slug} skillTitle={skill.name} />
         )}
       </section>
 

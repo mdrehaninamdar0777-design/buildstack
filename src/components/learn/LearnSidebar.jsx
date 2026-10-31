@@ -7,12 +7,14 @@ import {
   Laptop,
   Workflow,
   Bookmark,
+  FileText,
   Flame,
   ArrowRight,
   HelpCircle,
   Check,
   Code2,
 } from "lucide-react";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const navigationItems = [
   {
@@ -39,20 +41,27 @@ const navigationItems = [
     aliases: ["/learn/bookmarks"],
     icon: Bookmark,
   },
+  {
+    label: "Notes",
+    href: "/notes",
+    aliases: ["/notes"],
+    icon: FileText,
+  },
 ];
 
-const streakDays = [
-  { day: "M", completed: true },
-  { day: "T", completed: true },
-  { day: "W", completed: true },
-  { day: "T", completed: true },
-  { day: "F", completed: true },
-  { day: "S", completed: false },
-  { day: "S", completed: false },
-];
+const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
 export default function LearnSidebar({ onLinkClick }) {
   const pathname = usePathname();
+  const { dbProfile } = useUserProfile();
+
+  const streakDays = dbProfile?.learningStats?.streakDays || 0;
+  // Build a 7-day checklist: mark the last `streakDays` days as completed (capped at 7)
+  const cappedStreak = Math.min(streakDays, 7);
+  const weekDays = DAYS.map((day, idx) => ({
+    day,
+    completed: idx < cappedStreak,
+  }));
 
   const isItemActive = (item) => {
     if (item.href === "/learn/domains" && (pathname === "/learn" || pathname.startsWith("/learn/domains"))) {
@@ -139,13 +148,13 @@ export default function LearnSidebar({ onLinkClick }) {
 
           <div className="mt-2 flex items-center gap-2">
             <Flame className="h-5 w-5 fill-orange-500 text-orange-500" />
-            <span className="text-xl font-black text-neutral-900">12</span>
+            <span className="text-xl font-black text-neutral-900">{streakDays}</span>
             <span className="text-xs font-medium text-neutral-500">Days</span>
           </div>
 
           {/* 7-Day Checklist (M T W T F S S) */}
           <div className="mt-3 flex items-center justify-between">
-            {streakDays.map((streak, idx) => (
+            {weekDays.map((streak, idx) => (
               <div key={idx} className="flex flex-col items-center gap-1">
                 <span className="text-[10px] font-medium text-neutral-400">
                   {streak.day}

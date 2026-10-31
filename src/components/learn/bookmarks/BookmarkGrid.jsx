@@ -15,7 +15,7 @@ function SectionHeader({ title, onViewAll }) {
   );
 }
 
-export default function BookmarkGrid({ bookmarks }) {
+export default function BookmarkGrid({ bookmarks, onRemove }) {
   const skills = bookmarks.filter((b) => b.type === "skill");
   const roadmaps = bookmarks.filter((b) => b.type === "roadmap");
   const resources = bookmarks.filter((b) => b.type === "resource");
@@ -40,7 +40,7 @@ export default function BookmarkGrid({ bookmarks }) {
           <SectionHeader title="Skills" />
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {skills.map((bookmark) => (
-              <BookmarkCard key={bookmark.id} bookmark={bookmark} />
+              <BookmarkCard key={bookmark.id} bookmark={bookmark} onRemove={onRemove} />
             ))}
           </div>
         </section>
@@ -51,7 +51,7 @@ export default function BookmarkGrid({ bookmarks }) {
           <SectionHeader title="Roadmaps" />
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {roadmaps.map((bookmark) => (
-              <BookmarkCard key={bookmark.id} bookmark={bookmark} />
+              <BookmarkCard key={bookmark.id} bookmark={bookmark} onRemove={onRemove} />
             ))}
           </div>
         </section>
@@ -62,7 +62,7 @@ export default function BookmarkGrid({ bookmarks }) {
           <SectionHeader title="Resources" />
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {resources.map((bookmark) => (
-              <BookmarkCard key={bookmark.id} bookmark={bookmark} />
+              <BookmarkCard key={bookmark.id} bookmark={bookmark} onRemove={onRemove} />
             ))}
           </div>
         </section>

@@ -1,34 +1,33 @@
 import { Code2, Map, FileText, Clock3 } from "lucide-react";
 import { bookmarkStats } from "@/data/learn/bookmarks.data";
 
-const stats = [
-  {
-    icon: Code2,
-    value: bookmarkStats.savedSkills,
-    label: "Saved Skills",
-    sublabel: "Total bookmarked skills",
-  },
-  {
-    icon: Map,
-    value: bookmarkStats.savedRoadmaps,
-    label: "Saved Roadmaps",
-    sublabel: "Total bookmarked roadmaps",
-  },
-  {
-    icon: FileText,
-    value: bookmarkStats.savedResources,
-    label: "Saved Resources",
-    sublabel: "Total bookmarked resources",
-  },
-  {
-    icon: Clock3,
-    value: bookmarkStats.recentlyAdded,
-    label: "Recently Added",
-    sublabel: "In the last 7 days",
-  },
-];
-
-export default function BookmarkHeader() {
+export default function BookmarkHeader({ customStats = null }) {
+  const statsList = [
+    {
+      icon: Code2,
+      value: customStats?.savedSkills ?? bookmarkStats.savedSkills,
+      label: "Saved Skills",
+      sublabel: "Total bookmarked skills",
+    },
+    {
+      icon: Map,
+      value: customStats?.savedRoadmaps ?? bookmarkStats.savedRoadmaps,
+      label: "Saved Roadmaps",
+      sublabel: "Total bookmarked roadmaps",
+    },
+    {
+      icon: FileText,
+      value: customStats?.savedResources ?? bookmarkStats.savedResources,
+      label: "Saved Resources",
+      sublabel: "Total bookmarked resources",
+    },
+    {
+      icon: Clock3,
+      value: customStats?.recentlyAdded ?? bookmarkStats.recentlyAdded,
+      label: "Recently Added",
+      sublabel: "In the last 7 days",
+    },
+  ];
   return (
     <div>
       {/* Page Title */}
@@ -60,7 +59,7 @@ export default function BookmarkHeader() {
 
       {/* Stats Strip */}
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {stats.map((stat) => {
+        {statsList.map((stat) => {
           const Icon = stat.icon;
           return (
             <div

@@ -30,12 +30,20 @@ export default function RecentActivityCard({
       {/* Activities */}
       {activities.length > 0 ? (
         <div className="divide-y divide-neutral-100">
-          {activities.map((item) => {
-            const isNotes = item.type === "notes";
+          {activities.map((item, idx) => {
+            const isNotes = item.type === "notes" || item.type === "note";
+            const timeDisplay =
+              item.time ||
+              (item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString([], {
+                    month: "short",
+                    day: "numeric",
+                  })
+                : "Recently");
 
             return (
               <article
-                key={item.id}
+                key={item.id || item._id || `${item.title}-${idx}`}
                 className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0"
               >
                 <div className="flex items-center gap-3.5">
@@ -43,7 +51,7 @@ export default function RecentActivityCard({
                     {isNotes ? (
                       <FileText className="h-5 w-5 text-neutral-700" />
                     ) : (
-                      <TechIcon name={item.type} className="h-full w-full" />
+                      <TechIcon name={item.type || "Code2"} className="h-full w-full" />
                     )}
                   </div>
 
@@ -53,7 +61,7 @@ export default function RecentActivityCard({
                 </div>
 
                 <time className="shrink-0 text-xs font-medium text-neutral-400">
-                  {item.time}
+                  {timeDisplay}
                 </time>
               </article>
             );

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Download,
   FileText,
@@ -60,13 +61,13 @@ export default function NotesSection({ notes }) {
         ))}
       </div>
 
-      <div className="mt-4 flex justify-center">
-        <button
-          type="button"
-          className="rounded-lg border border-neutral-200 px-5 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-neutral-50"
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+        <Link
+          href="/notes"
+          className="rounded-xl bg-black px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-neutral-800"
         >
-          View All Notes (PDF) →
-        </button>
+          My Personal Study Notes →
+        </Link>
       </div>
     </div>
   );

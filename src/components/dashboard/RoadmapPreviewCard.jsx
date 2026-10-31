@@ -31,35 +31,40 @@ export default function RoadmapPreviewCard({
       {roadmaps.length > 0 ? (
         <div className="space-y-6">
           {roadmaps.map(
-            ({
-              id,
-              title,
-              level,
-              progress,
-            }) => (
-              <article
-                key={id}
-                className="space-y-3"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-neutral-900">
-                      {title}
-                    </h3>
+            (roadmap) => {
+              const rId = roadmap.roadmapId || roadmap.id;
+              const rTitle = roadmap.title;
+              const rLevel = roadmap.level || "Beginner";
+              const rProgress = roadmap.progress || 0;
 
-                    <Badge className="mt-2">
-                      {level}
-                    </Badge>
+              return (
+                <article
+                  key={rId}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Link
+                        href={`/learn/roadmaps/${rId}`}
+                        className="font-medium text-neutral-900 hover:underline transition"
+                      >
+                        {rTitle}
+                      </Link>
+
+                      <Badge className="mt-2 block w-fit">
+                        {rLevel}
+                      </Badge>
+                    </div>
+
+                    <span className="text-sm font-medium text-neutral-500">
+                      {rProgress}%
+                    </span>
                   </div>
 
-                  <span className="text-sm font-medium text-neutral-500">
-                    {progress}%
-                  </span>
-                </div>
-
-                <ProgressBar value={progress} />
-              </article>
-            )
+                  <ProgressBar value={rProgress} />
+                </article>
+              );
+            }
           )}
         </div>
       ) : (

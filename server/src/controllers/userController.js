@@ -273,6 +273,11 @@ export async function getDashboardStats(req, res, next) {
           activeRoadmapsCount: user.enrolledRoadmaps?.length || 0,
           streakDays: user.learningStats?.streakDays || 0,
         },
+        learningStats: user.learningStats || {
+          totalLearningMinutes: 0,
+          streakDays: 0,
+          lastActiveDate: null,
+        },
         weeklyActivity,
         enrolledRoadmaps: user.enrolledRoadmaps || [],
         skills: user.skills || [],

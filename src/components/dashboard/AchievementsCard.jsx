@@ -1,8 +1,17 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Trophy, Award, Zap, Flame, Shield, CheckCircle } from "lucide-react";
 
 import { Card } from "@/components/ui";
 import { cn } from "@/lib/utils";
+
+const ICON_MAP = {
+  Trophy,
+  Award,
+  Zap,
+  Flame,
+  Shield,
+  CheckCircle,
+};
 
 export default function AchievementsCard({
   achievements = [],
@@ -30,50 +39,50 @@ export default function AchievementsCard({
       {/* Content */}
       {achievements.length > 0 ? (
         <div className="space-y-5">
-          {achievements.map(
-            ({
-              id,
-              icon: Icon,
-              iconClassName,
-              iconContainerClassName,
-              title,
-              description,
-              earnedAt,
-            }) => (
+          {achievements.map((ach) => {
+            const RawIcon = ach.icon;
+            const ResolvedIcon =
+              typeof RawIcon === "function"
+                ? RawIcon
+                : typeof RawIcon === "string" && ICON_MAP[RawIcon]
+                ? ICON_MAP[RawIcon]
+                : Trophy;
+
+            return (
               <article
-                key={id}
+                key={ach.id || ach._id || ach.title}
                 className="flex items-start gap-4"
               >
                 <div
                   className={cn(
-                    "flex h-11 w-11 items-center justify-center rounded-xl",
-                    iconContainerClassName
+                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600",
+                    ach.iconContainerClassName
                   )}
                 >
-                  <Icon
+                  <ResolvedIcon
                     className={cn(
                       "h-5 w-5",
-                      iconClassName
+                      ach.iconClassName
                     )}
                   />
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <h3 className="font-medium text-neutral-900">
-                    {title}
+                    {ach.title}
                   </h3>
 
                   <p className="mt-1 text-sm text-neutral-500">
-                    {description}
+                    {ach.description}
                   </p>
 
                   <time className="mt-2 block text-xs text-neutral-400">
-                    {earnedAt}
+                    {ach.earnedAt || "Recently Earned"}
                   </time>
                 </div>
               </article>
-            )
-          )}
+            );
+          })}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10 text-center">
