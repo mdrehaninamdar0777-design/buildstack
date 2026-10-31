@@ -9,6 +9,7 @@ import {
 } from "@/components/learn/bookmarks";
 
 import { bookmarks } from "@/data/learn/bookmarks.data";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function BookmarksPage() {
   const [filter, setFilter] = useState("all");
@@ -29,24 +30,26 @@ export default function BookmarksPage() {
   }, [filter]);
 
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-10 lg:px-10">
-      {/* Header with stats */}
-      <BookmarkHeader />
+    <ProtectedRoute>
+      <div className="mx-auto max-w-[1400px] px-6 py-10 lg:px-10">
+        {/* Header with stats */}
+        <BookmarkHeader />
 
-      {/* Filters */}
-      <div className="mt-8">
-        <BookmarkFilters
-          filter={filter}
-          onFilterChange={setFilter}
-          sort={sort}
-          onSortChange={setSort}
-        />
-      </div>
+        {/* Filters */}
+        <div className="mt-8">
+          <BookmarkFilters
+            filter={filter}
+            onFilterChange={setFilter}
+            sort={sort}
+            onSortChange={setSort}
+          />
+        </div>
 
-      {/* Grid */}
-      <div className="mt-8">
-        <BookmarkGrid bookmarks={filteredBookmarks} />
+        {/* Grid */}
+        <div className="mt-8">
+          <BookmarkGrid bookmarks={filteredBookmarks} />
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

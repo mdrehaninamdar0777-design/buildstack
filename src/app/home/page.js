@@ -7,10 +7,13 @@ import ContinueLastSession from "@/components/home/ContinueLastSession";
 import QuickActions from "@/components/home/QuickActions";
 import AppNavbar from "@/components/layout/AppNavbar";
 
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+
 export default function HomePage() {
     return (
-        <main className="min-h-screen bg-white">
-            <AppNavbar />
+        <ProtectedRoute>
+            <main className="min-h-screen bg-white">
+                <AppNavbar />
 
             <div className="mx-auto max-w-[1400px] px-6 py-8 lg:px-10">
 
@@ -42,5 +45,6 @@ export default function HomePage() {
 
             </div>
         </main>
+      </ProtectedRoute>
     );
 }

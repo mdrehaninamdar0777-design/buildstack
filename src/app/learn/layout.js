@@ -3,12 +3,14 @@
 import { useState } from "react";
 import AppNavbar from "@/components/layout/AppNavbar";
 import LearnSidebar from "@/components/learn/LearnSidebar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { X } from "lucide-react";
 
 export default function LearnLayout({ children }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-white text-neutral-900">
       <AppNavbar onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)} />
 
@@ -52,5 +54,6 @@ export default function LearnLayout({ children }) {
         </main>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

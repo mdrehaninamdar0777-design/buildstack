@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import AppNavbar from "@/components/layout/AppNavbar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function EditProfilePage() {
   const fileInputRef = useRef(null);
@@ -53,9 +54,10 @@ export default function EditProfilePage() {
   };
 
   return (
-    <main className="min-h-screen bg-neutral-50">
-      {/* Shared Navbar */}
-      <AppNavbar />
+    <ProtectedRoute>
+      <main className="min-h-screen bg-neutral-50">
+        {/* Shared Navbar */}
+        <AppNavbar />
 
       <div className="mx-auto max-w-5xl px-6 py-10 lg:px-8">
 
@@ -303,5 +305,6 @@ export default function EditProfilePage() {
         </form>
       </div>
     </main>
+    </ProtectedRoute>
   );
 }

@@ -4,6 +4,7 @@ import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import AppNavbar from "@/components/layout/AppNavbar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 import {
   SearchHeader,
@@ -212,11 +213,13 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <main className="min-h-screen bg-neutral-50">
-      <AppNavbar />
-      <Suspense fallback={<div className="mx-auto max-w-5xl px-6 py-10 text-neutral-500">Loading search...</div>}>
-        <SearchContent />
-      </Suspense>
-    </main>
+    <ProtectedRoute>
+      <main className="min-h-screen bg-neutral-50">
+        <AppNavbar />
+        <Suspense fallback={<div className="mx-auto max-w-5xl px-6 py-10 text-neutral-500">Loading search...</div>}>
+          <SearchContent />
+        </Suspense>
+      </main>
+    </ProtectedRoute>
   );
 }

@@ -1,28 +1,37 @@
+
 import mongoose from "mongoose";
 
 /**
- * Reusable MongoDB Connection Function using Mongoose.
- * Sanitizes logging to prevent exposing credentials.
+ * Reusable MongoDB Connection Function.
+ * Explicitly connects BuildStack to the buildstack database.
  */
 export async function connectDB() {
   const uri = process.env.MONGODB_URI;
 
   if (!uri) {
     console.warn(
-      "[Database Warning] MONGODB_URI is not defined in environment variables. MongoDB connection skipped."
+      "[Database Warning] MONGODB_URI is not defined. MongoDB connection skipped."
     );
     return false;
   }
 
   try {
-    const conn = await mongoose.connect(uri);
+    const conn = await mongoose.connect(uri, {
+      dbName: "buildstack",
+    });
 
-    // Sanitize host for secure logging (does not print credentials or full connection string)
     const host = conn.connection.host || "connected";
-    console.log(`[Database] MongoDB connected successfully (${host})`);
+    const database = conn.connection.name;
+
+    console.log(
+      `[Database] MongoDB connected successfully (${host}/${database})`
+    );
+
     return true;
   } catch (error) {
-    console.error(`[Database Error] MongoDB connection failed: ${error.message}`);
+    console.error(
+      `[Database Error] MongoDB connection failed: ${error.message}`
+    );
     return false;
   }
 }

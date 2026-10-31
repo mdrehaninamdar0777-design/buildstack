@@ -1,4 +1,5 @@
 import AppNavbar from "@/components/layout/AppNavbar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 import {
   ChangePasswordHeader,
@@ -7,36 +8,38 @@ import {
 
 export default function ChangePasswordPage() {
   return (
-    <main className="min-h-screen bg-neutral-50">
-      {/* Shared authenticated navbar */}
-      <AppNavbar />
+    <ProtectedRoute>
+      <main className="min-h-screen bg-neutral-50">
+        {/* Shared authenticated navbar */}
+        <AppNavbar />
 
-      <div className="mx-auto max-w-4xl px-6 py-10 lg:px-10">
-        <ChangePasswordHeader />
+        <div className="mx-auto max-w-4xl px-6 py-10 lg:px-10">
+          <ChangePasswordHeader />
 
-        <div className="mt-8">
-          <ChangePasswordForm />
-        </div>
+          <div className="mt-8">
+            <ChangePasswordForm />
+          </div>
 
-        {/* Security note */}
-        <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-4">
-          <div className="flex items-start gap-3">
-            <ShieldIcon />
+          {/* Security note */}
+          <div className="mt-6 rounded-xl border border-neutral-200 bg-white p-4">
+            <div className="flex items-start gap-3">
+              <ShieldIcon />
 
-            <div>
-              <p className="text-sm font-medium text-neutral-900">
-                Keep your account secure
-              </p>
+              <div>
+                <p className="text-sm font-medium text-neutral-900">
+                  Keep your account secure
+                </p>
 
-              <p className="mt-1 text-sm text-neutral-500">
-                Never share your password with anyone. BuildStack will never
-                ask you to share your password through email or messages.
-              </p>
+                <p className="mt-1 text-sm text-neutral-500">
+                  Never share your password with anyone. BuildStack will never
+                  ask you to share your password through email or messages.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </ProtectedRoute>
   );
 }
 
