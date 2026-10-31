@@ -76,9 +76,12 @@ export default function AchievementsCard({
           )}
         </div>
       ) : (
-        <div className="flex items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10">
-          <p className="text-sm text-neutral-500">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10 text-center">
+          <p className="text-sm font-medium text-neutral-600">
             No achievements yet.
+          </p>
+          <p className="mt-1 text-xs text-neutral-400">
+            Complete roadmaps, milestones, and learning streaks to unlock badges.
           </p>
         </div>
       )}

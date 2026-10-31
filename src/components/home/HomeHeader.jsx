@@ -3,7 +3,8 @@
 import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function HomeHeader() {
-  const { greeting } = useUserProfile();
+  const { greeting, dbProfile } = useUserProfile();
+  const streakDays = dbProfile?.learningStats?.streakDays || 0;
 
   return (
     <section className="w-full">
@@ -30,7 +31,7 @@ export default function HomeHeader() {
 
           <div>
             <p className="text-2xl font-bold leading-none text-neutral-900">
-              12
+              {streakDays}
             </p>
 
             <p className="mt-1 text-sm font-medium text-neutral-600">

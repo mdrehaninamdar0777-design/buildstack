@@ -8,6 +8,140 @@ import {
   Trophy,
 } from "lucide-react";
 
+/**
+ * Returns a formatted date string for the current week (Monday – Sunday).
+ * Example: "Oct 26 – Nov 1, 2026"
+ */
+export function getCurrentWeekDateRange() {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0 is Sunday, 1 is Monday
+  const diffToMonday = (dayOfWeek + 6) % 7;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - diffToMonday);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  const monthOptions = { month: "short", day: "numeric" };
+  const mondayStr = monday.toLocaleDateString("en-US", monthOptions);
+  const sundayStr = sunday.toLocaleDateString("en-US", {
+    ...monthOptions,
+    year: "numeric",
+  });
+
+  return `${mondayStr} – ${sundayStr}`;
+}
+
+/**
+ * Generates honest statistics based on the authenticated user's MongoDB profile.
+ * If data is unavailable or zero, displays honest default states without fabricated trends.
+ */
+export function getRealDashboardStats(dbProfile) {
+  const totalMinutes = dbProfile?.learningStats?.totalLearningMinutes || 0;
+  const totalHours = totalMinutes > 0 ? (totalMinutes / 60).toFixed(1) : "0";
+  const streakDays = dbProfile?.learningStats?.streakDays || 0;
+  const activeRoadmapsCount = dbProfile?.enrolledRoadmaps?.length || 0;
+  const skillsCount = dbProfile?.skills?.length || 0;
+
+  return [
+    {
+      id: 1,
+      title: "Total Learning Hours",
+      value: `${totalHours} hrs`,
+      subtitle: totalMinutes > 0 ? "Logged learning time" : "Start learning to log hours",
+      icon: Clock3,
+    },
+    {
+      id: 2,
+      title: "Completed Skills",
+      value: `${skillsCount}`,
+      subtitle: skillsCount > 0 ? "Skills in profile" : "Add skills in your profile",
+      icon: BookOpen,
+    },
+    {
+      id: 3,
+      title: "Active Roadmaps",
+      value: `${activeRoadmapsCount}`,
+      subtitle: activeRoadmapsCount > 0 ? "In progress" : "No enrolled roadmaps",
+      icon: Map,
+    },
+    {
+      id: 4,
+      title: "Current Streak",
+      value: `${streakDays} days`,
+      subtitle: streakDays > 0 ? "Keep the momentum going!" : "Learn today to start a streak",
+      icon: Flame,
+    },
+  ];
+}
+
+/**
+ * Returns honest weekly learning hours for the authenticated user.
+ */
+export function getRealWeeklyActivity(dbProfile) {
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weeklyMinutes = dbProfile?.learningStats?.weeklyMinutes;
+
+  return days.map((day) => {
+    let dayMin = 0;
+    if (weeklyMinutes) {
+      if (typeof weeklyMinutes.get === "function") {
+        dayMin = weeklyMinutes.get(day) || 0;
+      } else if (typeof weeklyMinutes === "object") {
+        dayMin = weeklyMinutes[day] || 0;
+      }
+    }
+    return {
+      day,
+      hours: Number((dayMin / 60).toFixed(1)),
+    };
+  });
+}
+
+/**
+ * Returns an honest summary message based on actual weekly learning hours.
+ */
+export function getRealWeeklySummary(weeklyData = []) {
+  const totalHours = weeklyData.reduce((acc, curr) => acc + (curr.hours || 0), 0);
+
+  if (totalHours > 0) {
+    return {
+      title: `Great job! You logged ${totalHours.toFixed(1)} hrs this week.`,
+      description: "Keep up the momentum and stay consistent!",
+      actionLabel: "View Insights",
+    };
+  }
+
+  return {
+    title: "Start your learning journey this week.",
+    description: "Explore roadmaps and begin lessons to log active study time.",
+    actionLabel: "Browse Roadmaps",
+  };
+}
+
+/**
+ * Returns clean calendar data for the current month.
+ */
+export function getRealCalendarData() {
+  const now = new Date();
+  const month = now.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  return {
+    month,
+    weeks: [
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+    ],
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PREVIEW DATA (Used exclusively for mode="preview" in landing page Hero.jsx)
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const dashboardHeaderData = {
   title: "Dashboard",
   description: "Track your learning progress and achievements.",
@@ -19,32 +153,32 @@ export const dashboardStats = [
     id: 1,
     title: "Total Learning Hours",
     value: "87.6 hrs",
-    change: "+18%",
-    description: "vs last week",
+    trend: "+18%",
+    subtitle: "vs last week",
     icon: Clock3,
   },
   {
     id: 2,
     title: "Completed Skills",
     value: "18",
-    change: "+12%",
-    description: "vs last week",
+    trend: "+12%",
+    subtitle: "vs last week",
     icon: BookOpen,
   },
   {
     id: 3,
     title: "Active Roadmaps",
     value: "3",
-    change: "0%",
-    description: "vs last week",
+    trend: "0%",
+    subtitle: "vs last week",
     icon: Map,
   },
   {
     id: 4,
     title: "Current Streak",
     value: "12 days",
-    change: "+2 days",
-    description: "vs last week",
+    trend: "+2 days",
+    subtitle: "vs last week",
     icon: Flame,
   },
 ];
@@ -108,18 +242,21 @@ export const activeRoadmaps = [
   {
     id: 1,
     title: "Frontend Developer",
+    level: "Intermediate",
     modules: "26 / 62 modules",
     progress: 42,
   },
   {
     id: 2,
     title: "Backend Developer",
+    level: "Intermediate",
     modules: "12 / 65 modules",
     progress: 18,
   },
   {
     id: 3,
     title: "AI Fundamentals",
+    level: "Beginner",
     modules: "5 / 58 modules",
     progress: 8,
   },

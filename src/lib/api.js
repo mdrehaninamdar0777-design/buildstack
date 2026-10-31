@@ -198,12 +198,29 @@ export async function updateUserProfile(payload = {}, token = null) {
   });
 }
 
+/**
+ * Retrieve the current authenticated user's dashboard statistics and progress.
+ * Calls GET /api/users/me/dashboard.
+ *
+ * @param {string} [token] - Optional explicit ID token
+ * @returns {Promise<{ success: boolean, dashboard: Object }>}
+ */
+export async function getDashboardStats(token = null) {
+  return await apiFetch("/api/users/me/dashboard", {
+    method: "GET",
+    token,
+    requiresAuth: true,
+  });
+}
+
 const api = {
   apiFetch,
   getAuthToken,
   syncUserWithBackend,
   getCurrentUserProfile,
   updateUserProfile,
+  getDashboardStats,
 };
 
 export default api;
+

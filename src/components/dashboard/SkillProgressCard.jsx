@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, Code2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { TechIcon } from "@/components/shared";
@@ -15,7 +15,7 @@ const skillColors = {
 export default function SkillProgressCard({
   title = "Skill Progress",
   skills = [],
-  viewAllHref = "/learn/skills",
+  viewAllHref = "/profile",
   className,
 }) {
   return (
@@ -36,29 +36,34 @@ export default function SkillProgressCard({
       {/* Skills */}
       {skills.length > 0 ? (
         <div className="space-y-4">
-          {skills.map((skill) => {
-            const barColor = skillColors[skill.name] || "bg-black";
+          {skills.map((skill, index) => {
+            const skillName = typeof skill === "string" ? skill : skill.name;
+            const skillProgress = typeof skill === "object" && typeof skill.progress === "number"
+              ? skill.progress
+              : 0;
+            const barColor = skillColors[skillName] || "bg-black";
+
             return (
-              <article key={skill.id} className="space-y-2">
+              <article key={skill.id || skillName || index} className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-neutral-50 border border-neutral-100 p-0.5">
-                      <TechIcon name={skill.name} className="h-full w-full" />
+                      <TechIcon name={skillName} className="h-full w-full" />
                     </span>
                     <span className="font-bold text-neutral-900">
-                      {skill.name}
+                      {skillName}
                     </span>
                   </div>
 
                   <span className="font-semibold text-neutral-700">
-                    {skill.progress}%
+                    {skillProgress}%
                   </span>
                 </div>
 
                 <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-100">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${barColor}`}
-                    style={{ width: `${skill.progress}%` }}
+                    style={{ width: `${Math.max(skillProgress, 4)}%` }}
                   />
                 </div>
               </article>
@@ -66,8 +71,19 @@ export default function SkillProgressCard({
           })}
         </div>
       ) : (
-        <div className="flex items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10">
-          <p className="text-sm text-neutral-500">No skills found.</p>
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10 text-center">
+          <p className="text-sm font-medium text-neutral-600">
+            No skills added yet.
+          </p>
+          <p className="mt-1 text-xs text-neutral-400">
+            Add skills in your profile to track your technical competencies.
+          </p>
+          <Link
+            href="/edit-profile"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-800 transition hover:bg-neutral-50"
+          >
+            Add Skills in Profile
+          </Link>
         </div>
       )}
     </Card>

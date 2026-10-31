@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 
 import { Button } from "@/components/ui";
@@ -7,18 +8,19 @@ export default function WeeklyActivitySummary({
   title,
   description,
   actionLabel,
+  actionHref = "/learn",
   onAction,
   className,
 }) {
   return (
     <div
       className={cn(
-        "mt-6 flex items-center justify-between rounded-2xl bg-neutral-50 p-5",
+        "mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-2xl bg-neutral-50 p-5",
         className
       )}
     >
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100">
           <TrendingUp className="h-6 w-6 text-blue-600" />
         </div>
 
@@ -33,12 +35,23 @@ export default function WeeklyActivitySummary({
         </div>
       </div>
 
-      <Button
-        variant="secondary"
-        onClick={onAction}
-      >
-        {actionLabel}
-      </Button>
+      {actionLabel && (
+        onAction ? (
+          <Button
+            variant="secondary"
+            onClick={onAction}
+            className="self-start sm:self-auto"
+          >
+            {actionLabel}
+          </Button>
+        ) : (
+          <Link href={actionHref} className="self-start sm:self-auto">
+            <Button variant="secondary">
+              {actionLabel}
+            </Button>
+          </Link>
+        )
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/auth.js";
-import { syncUser, getMe, updateMe } from "../controllers/userController.js";
+import { syncUser, getMe, updateMe, getDashboardStats } from "../controllers/userController.js";
 
 const router = Router();
 
@@ -17,6 +17,13 @@ router.post("/sync", verifyToken, syncUser);
  * @access  Protected
  */
 router.get("/me", verifyToken, getMe);
+
+/**
+ * @route   GET /api/users/me/dashboard
+ * @desc    Return the authenticated user's dashboard statistics & activity
+ * @access  Protected
+ */
+router.get("/me/dashboard", verifyToken, getDashboardStats);
 
 /**
  * @route   PUT /api/users/me

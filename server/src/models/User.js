@@ -30,6 +30,135 @@ const linkSchema = new Schema(
   { _id: false } // no separate _id for embedded links
 );
 
+// Sub-schema: enrolled roadmap tracking
+const enrolledRoadmapSchema = new Schema(
+  {
+    roadmapId: {
+      type: String,
+      required: [true, "roadmapId is required"],
+      trim: true,
+    },
+    title: {
+      type: String,
+      required: [true, "Roadmap title is required"],
+      trim: true,
+    },
+    level: {
+      type: String,
+      default: "Beginner",
+      trim: true,
+    },
+    progress: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
+    completedModules: {
+      type: [String],
+      default: [],
+    },
+    totalModules: {
+      type: Number,
+      default: 0,
+    },
+    enrolledAt: {
+      type: Date,
+      default: Date.now,
+    },
+    lastActivityAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false }
+);
+
+// Sub-schema: recent learning activity event
+const recentActivitySchema = new Schema(
+  {
+    id: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString(),
+    },
+    title: {
+      type: String,
+      required: [true, "Activity title is required"],
+      trim: true,
+    },
+    type: {
+      type: String,
+      default: "lesson",
+      trim: true,
+    },
+    time: {
+      type: String,
+      default: "Just now",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false }
+);
+
+// Sub-schema: earned achievement badge
+const achievementSchema = new Schema(
+  {
+    id: {
+      type: String,
+      required: [true, "Achievement ID is required"],
+      trim: true,
+    },
+    title: {
+      type: String,
+      required: [true, "Achievement title is required"],
+      trim: true,
+    },
+    description: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    earnedAt: {
+      type: String,
+      default: "",
+    },
+    icon: {
+      type: String,
+      default: "Award",
+    },
+  },
+  { _id: false }
+);
+
+// Sub-schema: aggregate learning statistics
+const learningStatsSchema = new Schema(
+  {
+    totalLearningMinutes: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    streakDays: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    lastActiveDate: {
+      type: Date,
+      default: null,
+    },
+    weeklyMinutes: {
+      type: Map,
+      of: Number,
+      default: () => new Map(),
+    },
+  },
+  { _id: false }
+);
+
 const userSchema = new Schema(
   {
     // ── Identity ────────────────────────────────────────────────────────────
@@ -111,6 +240,31 @@ const userSchema = new Schema(
         },
         message: "links must have at most 20 entries",
       },
+    },
+
+    // ── Progress & Dashboard Foundation ──────────────────────────────────────
+    enrolledRoadmaps: {
+      type: [enrolledRoadmapSchema],
+      default: [],
+    },
+
+    learningStats: {
+      type: learningStatsSchema,
+      default: () => ({
+        totalLearningMinutes: 0,
+        streakDays: 0,
+        lastActiveDate: null,
+      }),
+    },
+
+    recentActivity: {
+      type: [recentActivitySchema],
+      default: [],
+    },
+
+    achievements: {
+      type: [achievementSchema],
+      default: [],
     },
   },
   {

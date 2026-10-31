@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui";
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const rowLabels = ["Apr 28", "May 5", "May 12", "May 19", "May 26"];
+const defaultRowLabels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
 
 const intensity = [
   "bg-neutral-100",
@@ -21,7 +21,23 @@ export default function LearningCalendarCard({
   title = "Learning Calendar",
   viewAllHref = "/dashboard",
 }) {
-  const [currentMonth, setCurrentMonth] = useState(data?.month || "May 2025");
+  const [monthOffset, setMonthOffset] = useState(0);
+
+  const currentMonthLabel = useMemo(() => {
+    if (data?.month && monthOffset === 0) return data.month;
+    const date = new Date();
+    date.setMonth(date.getMonth() + monthOffset);
+    return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  }, [data?.month, monthOffset]);
+
+  const rowLabels = data?.rowLabels || defaultRowLabels;
+  const weeks = data?.weeks || [
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+  ];
 
   return (
     <Card className="p-6">
@@ -40,18 +56,18 @@ export default function LearningCalendarCard({
       <div className="mb-6 flex items-center justify-center gap-3">
         <button
           type="button"
-          onClick={() => setCurrentMonth("Apr 2025")}
+          onClick={() => setMonthOffset((prev) => prev - 1)}
           className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 hover:text-black"
           aria-label="Previous month"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
 
-        <span className="text-sm font-bold text-neutral-900">{currentMonth}</span>
+        <span className="text-sm font-bold text-neutral-900">{currentMonthLabel}</span>
 
         <button
           type="button"
-          onClick={() => setCurrentMonth("Jun 2025")}
+          onClick={() => setMonthOffset((prev) => prev + 1)}
           className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 hover:text-black"
           aria-label="Next month"
         >
@@ -72,18 +88,20 @@ export default function LearningCalendarCard({
 
           {/* Weeks Rows */}
           <div className="space-y-2">
-            {data.weeks.map((week, weekIndex) => (
+            {weeks.map((week, weekIndex) => (
               <div
                 key={weekIndex}
                 className="grid grid-cols-[60px_repeat(7,1fr)] items-center"
               >
                 <span className="text-[11px] text-neutral-400">
-                  {rowLabels[weekIndex]}
+                  {rowLabels[weekIndex] || `W${weekIndex + 1}`}
                 </span>
                 {week.map((value, dayIndex) => (
                   <div key={dayIndex} className="flex justify-center">
                     <div
-                      className={`h-5 w-5 rounded-md transition-colors hover:ring-2 hover:ring-emerald-400 ${intensity[value]}`}
+                      className={`h-5 w-5 rounded-md transition-colors hover:ring-2 hover:ring-emerald-400 ${
+                        intensity[value] || intensity[0]
+                      }`}
                     />
                   </div>
                 ))}

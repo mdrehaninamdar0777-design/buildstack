@@ -63,10 +63,20 @@ export default function RoadmapPreviewCard({
           )}
         </div>
       ) : (
-        <div className="flex items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10">
-          <p className="text-sm text-neutral-500">
-            No active roadmaps.
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-neutral-200 py-10 text-center">
+          <p className="text-sm font-medium text-neutral-600">
+            No active roadmaps enrolled yet.
           </p>
+          <p className="mt-1 text-xs text-neutral-400">
+            Choose a roadmap to begin structured learning.
+          </p>
+          <Link
+            href="/learn"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-black px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-neutral-800"
+          >
+            Explore Roadmaps
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
       )}
     </Card>

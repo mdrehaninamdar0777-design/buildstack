@@ -231,3 +231,57 @@ export async function updateMe(req, res, next) {
     return next(err);
   }
 }
+
+/**
+ * GET /api/users/me/dashboard
+ * Returns personalized dashboard statistics and progress for the authenticated user.
+ */
+export async function getDashboardStats(req, res, next) {
+  try {
+    const user = await User.findOne({ firebaseUid: req.user.uid });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found. Call POST /api/users/sync after sign-in.",
+      });
+    }
+
+    const learningMinutes = user.learningStats?.totalLearningMinutes || 0;
+    const totalHours = (learningMinutes / 60).toFixed(1);
+
+    // Days of week template
+    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const weeklyMap = user.learningStats?.weeklyMinutes || new Map();
+    const weeklyActivity = daysOfWeek.map((day) => {
+      const dayMinutes =
+        typeof weeklyMap.get === "function"
+          ? weeklyMap.get(day)
+          : weeklyMap[day];
+      return {
+        day,
+        hours: Number(((dayMinutes || 0) / 60).toFixed(1)),
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      dashboard: {
+        stats: {
+          totalLearningHours: totalHours,
+          completedSkillsCount: user.skills?.length || 0,
+          activeRoadmapsCount: user.enrolledRoadmaps?.length || 0,
+          streakDays: user.learningStats?.streakDays || 0,
+        },
+        weeklyActivity,
+        enrolledRoadmaps: user.enrolledRoadmaps || [],
+        skills: user.skills || [],
+        recentActivity: user.recentActivity || [],
+        achievements: user.achievements || [],
+      },
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
