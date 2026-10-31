@@ -13,19 +13,25 @@ import {
 
 import AppNavbar from "@/components/layout/AppNavbar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function EditProfilePage() {
+  const { displayName, email, initials, photoURL } = useUserProfile();
   const fileInputRef = useRef(null);
 
   const [profileImage, setProfileImage] = useState(null);
 
   const [formData, setFormData] = useState({
-    fullName: "Rehan",
-    email: "rehan@example.com",
+    fullName: "",
+    email: "",
     jobTitle: "Full Stack Developer",
     bio: "Passionate about building web applications and learning modern technologies. Always exploring new tools and improving my skills.",
     location: "Maharashtra, India",
   });
+
+  // Resolve: prefer user edits, fall back to Firebase data
+  const resolvedName = formData.fullName || displayName;
+  const resolvedEmail = formData.email || email;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -123,8 +129,14 @@ export default function EditProfilePage() {
                           alt="Profile"
                           className="h-full w-full object-cover"
                         />
+                      ) : photoURL ? (
+                        <img
+                          src={photoURL}
+                          alt="Profile"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
-                        "R"
+                        initials || "U"
                       )}
                     </div>
 
@@ -179,7 +191,7 @@ export default function EditProfilePage() {
                     <input
                       id="fullName"
                       name="fullName"
-                      value={formData.fullName}
+                      value={resolvedName}
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border border-neutral-200 bg-white pl-10 pr-4 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100"
                       placeholder="Enter your full name"
@@ -203,7 +215,7 @@ export default function EditProfilePage() {
                       id="email"
                       name="email"
                       type="email"
-                      value={formData.email}
+                      value={resolvedEmail}
                       onChange={handleChange}
                       className="h-11 w-full rounded-lg border border-neutral-200 bg-white pl-10 pr-4 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100"
                       placeholder="Enter your email"

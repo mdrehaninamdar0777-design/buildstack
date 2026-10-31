@@ -1,13 +1,19 @@
+"use client";
+
+import { useUserProfile } from "@/hooks/useUserProfile";
+
 export default function HomeHeader() {
+  const { greeting } = useUserProfile();
+
   return (
     <section className="w-full">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        
+
         {/* Welcome Text */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
             <span className="mr-2">👋</span>
-            Good Morning, Rehan!
+            {greeting}
           </h1>
 
           <p className="mt-2 text-base text-neutral-500">
@@ -17,7 +23,7 @@ export default function HomeHeader() {
 
         {/* Day Streak */}
         <div className="flex w-fit items-center gap-4 rounded-2xl border border-neutral-200 bg-white px-5 py-4 shadow-sm">
-          
+
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-50 text-3xl">
             🔥
           </div>

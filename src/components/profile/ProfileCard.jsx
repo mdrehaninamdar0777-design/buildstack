@@ -7,8 +7,16 @@ export default function ProfileCard({ profile }) {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         {/* Avatar */}
         <div className="relative shrink-0">
-          <div className="flex h-36 w-36 items-center justify-center rounded-full bg-neutral-100 text-6xl font-medium text-neutral-900">
-            {profile.avatar}
+          <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-full bg-neutral-100 text-6xl font-medium text-neutral-900">
+            {profile.photoURL ? (
+              <img
+                src={profile.photoURL}
+                alt={profile.name}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              profile.avatar
+            )}
           </div>
 
           <button
@@ -35,14 +43,14 @@ export default function ProfileCard({ profile }) {
           </p>
 
           <Link
-  href="/edit-profile"
-  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
->
-  <Pencil className="h-4 w-4" />
-  Edit Profile
-</Link>
+            href="/edit-profile"
+            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-black px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800"
+          >
+            <Pencil className="h-4 w-4" />
+            Edit Profile
+          </Link>
         </div>
       </div>
     </section>
   );
-}
+}

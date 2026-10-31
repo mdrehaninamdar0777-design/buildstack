@@ -4,10 +4,18 @@ import { useState } from "react";
 import { User, Mail } from "lucide-react";
 
 import { Button, Input } from "@/components/ui";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function PersonalInformationCard() {
-  const [name, setName] = useState("Rehan");
-  const [email, setEmail] = useState("rehan@example.com");
+  const { displayName, email } = useUserProfile();
+
+  const [name, setName] = useState("");
+  const [emailVal, setEmailVal] = useState("");
+
+  // Sync initial values from Firebase when they become available
+  // (avoids empty fields on first render before auth resolves)
+  const resolvedName = name || displayName;
+  const resolvedEmail = emailVal || email;
 
   return (
     <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
@@ -37,7 +45,7 @@ export default function PersonalInformationCard() {
             <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
 
             <Input
-              value={name}
+              value={resolvedName}
               onChange={(e) => setName(e.target.value)}
               className="pl-10"
             />
@@ -54,8 +62,8 @@ export default function PersonalInformationCard() {
 
             <Input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={resolvedEmail}
+              onChange={(e) => setEmailVal(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -70,3 +78,4 @@ export default function PersonalInformationCard() {
     </section>
   );
 }
+

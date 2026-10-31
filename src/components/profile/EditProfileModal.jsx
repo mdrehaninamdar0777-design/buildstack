@@ -2,19 +2,27 @@
 
 import { useState } from "react";
 import { ArrowLeft, Camera, X } from "lucide-react";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function EditProfileModal({ isOpen, onClose }) {
+  const { displayName, email, initials } = useUserProfile();
+
   const [formData, setFormData] = useState({
-    fullName: "Rehan Inamdar",
-    username: "rehan.dev",
+    fullName: "",
+    username: "",
     bio: "Full Stack Developer | Passionate about building products and solving real-world problems.",
-    email: "rehaninamdar@gmail.com",
-    college: "SGGS IE&T, Nanded",
-    location: "Parbhani, Maharashtra, India",
-    website: "https://rehan.dev",
-    github: "github.com/rehaninamdar07",
-    linkedin: "linkedin.com/in/rehaninamdar07",
+    email: "",
+    college: "",
+    location: "",
+    website: "",
+    github: "",
+    linkedin: "",
   });
+
+  // Resolve display values: prefer user edits, fall back to Firebase data
+  const resolvedName = formData.fullName || displayName;
+  const resolvedEmail = formData.email || email;
+  const resolvedInitials = initials;
 
   const [savedMessage, setSavedMessage] = useState(false);
 
@@ -81,7 +89,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
           <div className="flex items-center gap-5">
             <div className="relative">
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-neutral-900 text-2xl font-bold text-white shadow-sm">
-                R
+                {resolvedInitials}
               </div>
               <button
                 type="button"
@@ -111,7 +119,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
               </label>
               <input
                 name="fullName"
-                value={formData.fullName}
+                value={resolvedName}
                 onChange={handleChange}
                 className="mt-1.5 h-10 w-full rounded-xl border border-neutral-200 px-3.5 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200"
               />
@@ -158,7 +166,7 @@ export default function EditProfileModal({ isOpen, onClose }) {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={resolvedEmail}
                 onChange={handleChange}
                 className="mt-1.5 h-10 w-full rounded-xl border border-neutral-200 px-3.5 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200"
               />
