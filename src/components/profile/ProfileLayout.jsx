@@ -10,17 +10,29 @@ import { profileData } from "./profile.data";
 import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function ProfileLayout() {
-  const { displayName, email, photoURL, initials } = useUserProfile();
+  const { displayName, email, photoURL, initials, dbProfile } = useUserProfile();
 
-  // Merge live Firebase user data into profileData for display
+  // Merge live Firebase user data with MongoDB profile data.
+  // MongoDB fields (bio, role, skills, links) take priority over static profileData.
   const profile = {
     ...profileData,
     name: displayName,
     email,
-    // Use photoURL if available, otherwise fall back to initial letter
     avatar: photoURL ? null : initials || profileData.avatar,
     photoURL: photoURL || null,
+    // Override with DB data when available
+    role: dbProfile?.role || profileData.role,
   };
+
+  const about = {
+    ...profileData.about,
+    title: dbProfile?.role || profileData.about.title,
+    description: dbProfile?.bio || profileData.about.description,
+    location: dbProfile?.location || profileData.about.location,
+  };
+
+  const skills = dbProfile?.skills?.length ? dbProfile.skills : profileData.skills;
+  const links = dbProfile?.links?.length ? dbProfile.links : profileData.links;
 
   return (
     <div>
@@ -31,15 +43,15 @@ export default function ProfileLayout() {
         <ProfileCard profile={profile} />
 
         {/* About */}
-        <AboutCard about={profileData.about} />
+        <AboutCard about={about} />
 
         {/* Skills + Social Links */}
         <div className="grid gap-7 lg:grid-cols-2">
-          <SkillsCard skills={profileData.skills} />
+          <SkillsCard skills={skills} />
 
-          <SocialLinksCard links={profileData.links} />
+          <SocialLinksCard links={links} />
         </div>
       </div>
     </div>
   );
-}
+}

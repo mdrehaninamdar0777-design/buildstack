@@ -178,11 +178,32 @@ export async function getCurrentUserProfile(token = null) {
   });
 }
 
+/**
+ * Update the authenticated user's MongoDB profile.
+ * Calls PUT /api/users/me with only the allowed fields.
+ *
+ * Allowed fields: name, role, bio, location, avatar, skills, links
+ * Any other key is silently stripped by the server.
+ *
+ * @param {Object} payload - Profile fields to update
+ * @param {string} [token] - Optional explicit ID token
+ * @returns {Promise<{ success: boolean, user: Object }>}
+ */
+export async function updateUserProfile(payload = {}, token = null) {
+  return await apiFetch("/api/users/me", {
+    method: "PUT",
+    token,
+    requiresAuth: true,
+    body: payload,
+  });
+}
+
 const api = {
   apiFetch,
   getAuthToken,
   syncUserWithBackend,
   getCurrentUserProfile,
+  updateUserProfile,
 };
 
 export default api;
