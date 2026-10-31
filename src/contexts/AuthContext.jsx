@@ -14,6 +14,7 @@ import {
   signInWithPopup,
   signOut as firebaseSignOut,
   sendPasswordResetEmail,
+  updateProfile,
 } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from "@/lib/firebase";
 
@@ -29,9 +30,11 @@ export function AuthProvider({ children }) {
 
   /**
    * true while Firebase is resolving the initial auth state on mount.
-   * Components should render a skeleton / spinner while this is true.
+   * False if credentials are not configured.
    */
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(
+    () => Boolean(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+  );
 
   /** Last authentication error, or null when none. */
   const [error, setError] = useState(null);
@@ -41,7 +44,6 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // If client credentials are not configured, avoid attaching Firebase auth listeners
     if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-      setLoading(false);
       return;
     }
 
@@ -88,10 +90,20 @@ export function AuthProvider({ children }) {
    * Create a new account with email and password.
    * Throws a Firebase AuthError on failure — callers handle it.
    */
-  const signupWithEmail = useCallback(async (email, password) => {
+  const signupWithEmail = useCallback(async (email, password, displayName = "") => {
     clearError();
     try {
       const credential = await createUserWithEmailAndPassword(auth, email, password);
+      if (displayName && credential.user) {
+        try {
+          await updateProfile(credential.user, { displayName });
+          if (auth.currentUser) {
+            setUser(auth.currentUser);
+          }
+        } catch (profileErr) {
+          console.warn("[AuthContext] Failed to set displayName on profile:", profileErr);
+        }
+      }
       return credential;
     } catch (err) {
       setError(err);

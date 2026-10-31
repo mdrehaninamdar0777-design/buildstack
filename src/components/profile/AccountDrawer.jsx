@@ -15,6 +15,7 @@ import {
   Code2,
   ChevronRight,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AccountDrawer({
   isOpen,
@@ -23,6 +24,22 @@ export default function AccountDrawer({
   onOpenChangePassword,
 }) {
   const router = useRouter();
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    onClose();
+    try {
+      await logout();
+      router.push("/");
+    } catch (err) {
+      console.error("[AccountDrawer] Logout error:", err);
+      router.push("/");
+    }
+  };
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "Developer";
+  const userInitial = (displayName?.[0] || "U").toUpperCase();
+  const userHandle = `@${displayName.toLowerCase().replace(/\s+/g, "")}`;
 
   // Close on Escape key
   useEffect(() => {
@@ -65,14 +82,22 @@ export default function AccountDrawer({
 
             {/* User Profile Card */}
             <div className="mt-6 flex items-start gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-xl font-bold text-white shadow-sm">
-                R
-              </div>
+              {user?.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt={displayName}
+                  className="h-16 w-16 shrink-0 rounded-full object-cover shadow-sm"
+                />
+              ) : (
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-xl font-bold text-white shadow-sm">
+                  {userInitial}
+                </div>
+              )}
               <div className="min-w-0 flex-1">
                 <h3 className="text-lg font-bold text-neutral-900 truncate">
-                  Rehan Inamdar
+                  {displayName}
                 </h3>
-                <p className="text-xs text-neutral-500">@rehan.dev</p>
+                <p className="text-xs text-neutral-500">{userHandle}</p>
 
                 <div className="mt-2.5 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs font-semibold text-neutral-800">
@@ -217,10 +242,7 @@ export default function AccountDrawer({
 
               <button
                 type="button"
-                onClick={() => {
-                  onClose();
-                  router.push("/");
-                }}
+                onClick={handleLogout}
                 className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
               >
                 <span className="flex items-center gap-3">

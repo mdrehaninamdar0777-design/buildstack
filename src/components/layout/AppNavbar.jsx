@@ -20,10 +20,12 @@ import {
   EditProfileModal,
   ChangePasswordModal,
 } from "@/components/profile";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AppNavbar({ onToggleMobileSidebar }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, logout } = useAuth();
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false);
@@ -47,10 +49,21 @@ export default function AppNavbar({ onToggleMobileSidebar }) {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setProfileDropdownOpen(false);
-    router.push("/");
+    try {
+      await logout();
+      router.push("/");
+    } catch (err) {
+      console.error("[AppNavbar] Error during logout:", err);
+      router.push("/");
+    }
   };
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  const fullName = user?.displayName || user?.email?.split("@")[0] || "Developer";
+  const userInitial = (displayName?.[0] || "U").toUpperCase();
+  const userEmail = user?.email || "";
 
   return (
     <>
@@ -144,97 +157,114 @@ export default function AppNavbar({ onToggleMobileSidebar }) {
             </button>
 
             {/* User Avatar Menu Trigger */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setProfileDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2.5 rounded-xl p-1 transition hover:bg-neutral-50"
-                aria-expanded={profileDropdownOpen}
-                aria-haspopup="menu"
+            {user ? (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setProfileDropdownOpen((prev) => !prev)}
+                  className="flex items-center gap-2.5 rounded-xl p-1 transition hover:bg-neutral-50"
+                  aria-expanded={profileDropdownOpen}
+                  aria-haspopup="menu"
+                >
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt={displayName}
+                      className="h-9 w-9 rounded-full object-cover shadow-xs"
+                    />
+                  ) : (
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-xs font-bold text-white shadow-xs">
+                      {userInitial}
+                    </div>
+                  )}
+                  <span className="hidden text-sm font-semibold text-neutral-900 lg:block">
+                    {displayName}
+                  </span>
+                  <ChevronDown
+                    className={`hidden h-4 w-4 text-neutral-400 transition-transform lg:block ${
+                      profileDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl">
+                    <div className="border-b border-neutral-100 p-3">
+                      <p className="font-bold text-neutral-900 truncate">{fullName}</p>
+                      <p className="truncate text-xs text-neutral-500">
+                        {userEmail}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1 py-1">
+                      <Link
+                        href="/profile"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                      >
+                        <User className="h-4 w-4 text-neutral-400" />
+                        View Profile
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          setAccountDrawerOpen(true);
+                        }}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                      >
+                        <Settings className="h-4 w-4 text-neutral-400" />
+                        My Account & Stats
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          setEditProfileOpen(true);
+                        }}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                      >
+                        <Settings className="h-4 w-4 text-neutral-400" />
+                        Edit Profile
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          setChangePasswordOpen(true);
+                        }}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
+                      >
+                        <Lock className="h-4 w-4 text-neutral-400" />
+                        Change Password
+                      </button>
+                    </div>
+
+                    <div className="border-t border-neutral-100 pt-1">
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center justify-center rounded-xl bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-neutral-800 sm:text-sm"
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-xs font-bold text-white shadow-xs">
-                  R
-                </div>
-                <span className="hidden text-sm font-semibold text-neutral-900 lg:block">
-                  Rehan
-                </span>
-                <ChevronDown
-                  className={`hidden h-4 w-4 text-neutral-400 transition-transform lg:block ${
-                    profileDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {/* Dropdown Menu */}
-              {profileDropdownOpen && (
-                <div className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 shadow-xl">
-                  <div className="border-b border-neutral-100 p-3">
-                    <p className="font-bold text-neutral-900">Rehan Inamdar</p>
-                    <p className="truncate text-xs text-neutral-500">
-                      rehan@example.com
-                    </p>
-                  </div>
-
-                  <div className="space-y-1 py-1">
-                    <Link
-                      href="/profile"
-                      onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
-                    >
-                      <User className="h-4 w-4 text-neutral-400" />
-                      View Profile
-                    </Link>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        setAccountDrawerOpen(true);
-                      }}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
-                    >
-                      <Settings className="h-4 w-4 text-neutral-400" />
-                      My Account & Stats
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        setEditProfileOpen(true);
-                      }}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
-                    >
-                      <Settings className="h-4 w-4 text-neutral-400" />
-                      Edit Profile
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        setChangePasswordOpen(true);
-                      }}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-50 hover:text-neutral-900"
-                    >
-                      <Lock className="h-4 w-4 text-neutral-400" />
-                      Change Password
-                    </button>
-                  </div>
-
-                  <div className="border-t border-neutral-100 pt-1">
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+                Sign In
+              </Link>
+            )}
 
           </div>
         </div>

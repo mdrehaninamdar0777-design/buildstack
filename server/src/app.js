@@ -6,12 +6,14 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
-// Allowed origins for CORS (defaulting to Next.js development ports)
+// Allowed origins for CORS (Next.js development and configured client URLs)
 const allowedOrigins = [
-  process.env.CLIENT_URL || "http://localhost:3000",
+  process.env.CLIENT_URL,
   "http://localhost:3000",
   "http://localhost:3001",
-];
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+].filter(Boolean);
 
 // CORS Middleware
 app.use(
@@ -22,9 +24,8 @@ app.use(
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
-      } else {
-        return callback(new Error(`Origin ${origin} not allowed by CORS`));
       }
+      return callback(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],

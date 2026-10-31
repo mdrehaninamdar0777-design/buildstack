@@ -12,9 +12,36 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { BuildStackLogo } from "@/components/shared";
+import { useAuth } from "@/contexts/AuthContext";
+import { syncUserWithBackend } from "@/lib/api";
+
+function formatAuthError(err) {
+  if (!err) return "An unexpected error occurred. Please try again.";
+  const code = err.code || "";
+  switch (code) {
+    case "auth/email-already-in-use":
+      return "An account with this email address already exists. Please log in instead.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/operation-not-allowed":
+      return "Email/password registration is not enabled in Firebase Authentication.";
+    case "auth/weak-password":
+      return "Password is too weak. Please use at least 6 characters.";
+    case "auth/network-request-failed":
+      return "Network error. Please check your internet connection.";
+    case "auth/popup-blocked":
+      return "Sign-in popup was blocked by your browser. Please allow popups for this site.";
+    case "auth/account-exists-with-different-credential":
+      return "An account already exists with the same email using a different sign-in method.";
+    default:
+      return err.message || "Registration failed. Please try again.";
+  }
+}
 
 export default function RegisterForm() {
   const router = useRouter();
+  const { signupWithEmail, loginWithGoogle, loginWithGithub } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -26,6 +53,7 @@ export default function RegisterForm() {
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState(null); // 'google' | 'github' | null
 
   // Compute password strength
   const getPasswordStrength = (pwd) => {
@@ -44,10 +72,14 @@ export default function RegisterForm() {
 
   const strength = getPasswordStrength(password);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!fullName || !email || !password || !confirmPassword) {
+    if (!fullName.trim() || !email.trim() || !password || !confirmPassword) {
       setError("Please fill in all required fields.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
       return;
     }
     if (password !== confirmPassword) {
@@ -62,11 +94,106 @@ export default function RegisterForm() {
     setError("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // 1. Create account in Firebase and set displayName
+      const credential = await signupWithEmail(email.trim(), password, fullName.trim());
+      const token = await credential.user.getIdToken();
+
+      // 2. Synchronize user with backend MongoDB Atlas
+      try {
+        await syncUserWithBackend({ displayName: fullName.trim() }, token);
+      } catch (syncErr) {
+        console.error("[RegisterForm] Backend synchronization failed:", syncErr);
+        setError(
+          syncErr.message ||
+            "Account was created, but failed to initialize your profile with the server. Please try logging in."
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      // 3. Navigate only after successful synchronization
       router.push("/home");
-    }, 450);
+    } catch (err) {
+      console.error("[RegisterForm] Registration error:", err);
+      setError(formatAuthError(err));
+      setIsLoading(false);
+    }
   };
+
+  const handleGoogleSignup = async () => {
+    setError("");
+    setSocialLoading("google");
+
+    try {
+      const credential = await loginWithGoogle();
+      const token = await credential.user.getIdToken();
+
+      try {
+        await syncUserWithBackend(
+          credential.user.displayName ? { displayName: credential.user.displayName } : {},
+          token
+        );
+      } catch (syncErr) {
+        console.error("[RegisterForm] Backend sync failed after Google auth:", syncErr);
+        setError(
+          syncErr.message ||
+            "Google sign-in succeeded, but server synchronization failed. Please try again."
+        );
+        setSocialLoading(null);
+        return;
+      }
+
+      router.push("/home");
+    } catch (err) {
+      if (
+        err.code !== "auth/popup-closed-by-user" &&
+        err.code !== "auth/cancelled-popup-request"
+      ) {
+        console.error("[RegisterForm] Google signup error:", err);
+        setError(formatAuthError(err));
+      }
+      setSocialLoading(null);
+    }
+  };
+
+  const handleGithubSignup = async () => {
+    setError("");
+    setSocialLoading("github");
+
+    try {
+      const credential = await loginWithGithub();
+      const token = await credential.user.getIdToken();
+
+      try {
+        await syncUserWithBackend(
+          credential.user.displayName ? { displayName: credential.user.displayName } : {},
+          token
+        );
+      } catch (syncErr) {
+        console.error("[RegisterForm] Backend sync failed after GitHub auth:", syncErr);
+        setError(
+          syncErr.message ||
+            "GitHub sign-in succeeded, but server synchronization failed. Please try again."
+        );
+        setSocialLoading(null);
+        return;
+      }
+
+      router.push("/home");
+    } catch (err) {
+      if (
+        err.code !== "auth/popup-closed-by-user" &&
+        err.code !== "auth/cancelled-popup-request"
+      ) {
+        console.error("[RegisterForm] GitHub signup error:", err);
+        setError(formatAuthError(err));
+      }
+      setSocialLoading(null);
+    }
+  };
+
+  const isAnyLoading = isLoading || socialLoading !== null;
 
   return (
     <div className="w-full max-w-[460px]">
@@ -114,7 +241,8 @@ export default function RegisterForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Enter your full name"
-                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-4 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100"
+                disabled={isAnyLoading}
+                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-4 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100 disabled:opacity-60"
               />
             </div>
           </div>
@@ -136,7 +264,8 @@ export default function RegisterForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-4 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100"
+                disabled={isAnyLoading}
+                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-4 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100 disabled:opacity-60"
               />
             </div>
           </div>
@@ -158,7 +287,8 @@ export default function RegisterForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Create a strong password"
-                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-11 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100"
+                disabled={isAnyLoading}
+                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-11 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100 disabled:opacity-60"
               />
 
               <button
@@ -203,7 +333,8 @@ export default function RegisterForm() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
-                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-11 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100"
+                disabled={isAnyLoading}
+                className="h-11 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-11 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-100 disabled:opacity-60"
               />
 
               <button
@@ -224,6 +355,7 @@ export default function RegisterForm() {
               type="checkbox"
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
+              disabled={isAnyLoading}
               className="mt-0.5 h-4 w-4 rounded border-neutral-300 accent-neutral-900"
             />
 
@@ -243,7 +375,7 @@ export default function RegisterForm() {
           {/* Create Account Button */}
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isAnyLoading}
             className="flex h-11 w-full items-center justify-center rounded-xl bg-black text-sm font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
           >
             {isLoading ? "Creating Account..." : "Create Account"}
@@ -262,9 +394,11 @@ export default function RegisterForm() {
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-semibold text-neutral-800 transition hover:bg-neutral-50 sm:text-sm"
+              onClick={handleGoogleSignup}
+              disabled={isAnyLoading}
+              className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-semibold text-neutral-800 transition hover:bg-neutral-50 disabled:opacity-60 sm:text-sm"
             >
-              <svg className="h-4 w-4" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -282,17 +416,19 @@ export default function RegisterForm() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>Continue with Google</span>
+              <span>{socialLoading === "google" ? "Connecting..." : "Google"}</span>
             </button>
 
             <button
               type="button"
-              className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-semibold text-neutral-800 transition hover:bg-neutral-50 sm:text-sm"
+              onClick={handleGithubSignup}
+              disabled={isAnyLoading}
+              className="flex h-11 items-center justify-center gap-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-semibold text-neutral-800 transition hover:bg-neutral-50 disabled:opacity-60 sm:text-sm"
             >
-              <svg className="h-4 w-4 fill-current text-neutral-900" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 shrink-0 fill-current text-neutral-900" viewBox="0 0 24 24">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
               </svg>
-              <span>Continue with GitHub</span>
+              <span>{socialLoading === "github" ? "Connecting..." : "GitHub"}</span>
             </button>
           </div>
 
