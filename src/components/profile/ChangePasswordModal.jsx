@@ -2,6 +2,31 @@
 
 import { useState } from "react";
 import { Lock, Eye, EyeOff, X } from "lucide-react";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
+
+/**
+ * Maps Firebase Auth error codes to user-friendly messages.
+ */
+function getFirebasePasswordError(code) {
+  switch (code) {
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+      return "Current password is incorrect. Please try again.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please wait a moment and try again.";
+    case "auth/requires-recent-login":
+      return "For security, please log out and log back in before changing your password.";
+    case "auth/weak-password":
+      return "New password is too weak. Use at least 8 characters.";
+    default:
+      return "Failed to update password. Please try again.";
+  }
+}
 
 export default function ChangePasswordModal({ isOpen, onClose }) {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -12,34 +37,75 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleClose = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setError("");
+    setMessage("");
+    onClose();
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
+
     if (!currentPassword || !newPassword || !confirmPassword) {
       setError("Please fill in all password fields.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      setError("New password must be at least 8 characters.");
       return;
     }
     if (newPassword !== confirmPassword) {
       setError("New passwords do not match.");
       return;
     }
-    setError("");
-    setMessage("Password successfully updated!");
-    setTimeout(() => {
-      setMessage("");
-      onClose();
-    }, 600);
+    if (newPassword === currentPassword) {
+      setError("New password must be different from current password.");
+      return;
+    }
+
+    const firebaseUser = auth.currentUser;
+    if (!firebaseUser || !firebaseUser.email) {
+      setError("No authenticated user. Please log in and try again.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const credential = EmailAuthProvider.credential(
+        firebaseUser.email,
+        currentPassword
+      );
+      await reauthenticateWithCredential(firebaseUser, credential);
+      await updatePassword(firebaseUser, newPassword);
+
+      setMessage("Password successfully updated!");
+      setTimeout(() => {
+        handleClose();
+      }, 1200);
+    } catch (err) {
+      console.error("[ChangePasswordModal] Password update failed:", err.code);
+      setError(getFirebasePasswordError(err.code));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
-        onClick={onClose}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
@@ -49,7 +115,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
           <h2 className="text-base font-bold text-neutral-900">Change Password</h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-black"
           >
             <X className="h-5 w-5" />
@@ -80,7 +146,8 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
-                className="h-10 w-full rounded-xl border border-neutral-200 px-3.5 pr-10 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200"
+                disabled={loading}
+                className="h-10 w-full rounded-xl border border-neutral-200 px-3.5 pr-10 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200 disabled:opacity-60"
               />
               <button
                 type="button"
@@ -103,7 +170,8 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
-                className="h-10 w-full rounded-xl border border-neutral-200 px-3.5 pr-10 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200"
+                disabled={loading}
+                className="h-10 w-full rounded-xl border border-neutral-200 px-3.5 pr-10 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200 disabled:opacity-60"
               />
               <button
                 type="button"
@@ -126,7 +194,8 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
-                className="h-10 w-full rounded-xl border border-neutral-200 px-3.5 pr-10 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200"
+                disabled={loading}
+                className="h-10 w-full rounded-xl border border-neutral-200 px-3.5 pr-10 text-sm text-neutral-900 outline-none focus:border-neutral-400 focus:ring-1 focus:ring-neutral-200 disabled:opacity-60"
               />
               <button
                 type="button"
@@ -142,16 +211,18 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
           <div className="flex items-center justify-end gap-3 border-t border-neutral-100 pt-4">
             <button
               type="button"
-              onClick={onClose}
-              className="rounded-xl border border-neutral-200 bg-white px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50"
+              onClick={handleClose}
+              disabled={loading}
+              className="rounded-xl border border-neutral-200 bg-white px-4 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50 disabled:opacity-60"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-xl bg-black px-5 py-2 text-xs font-semibold text-white hover:bg-neutral-800"
+              disabled={loading}
+              className="rounded-xl bg-black px-5 py-2 text-xs font-semibold text-white hover:bg-neutral-800 disabled:opacity-60"
             >
-              Update Password
+              {loading ? "Updating..." : "Update Password"}
             </button>
           </div>
         </form>
